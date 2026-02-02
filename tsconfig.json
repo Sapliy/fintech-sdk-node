@@ -4,6 +4,7 @@
         "module": "CommonJS",
         "declaration": true,
         "outDir": "./dist",
+        "rootDir": "src",
         "strict": true,
         "esModuleInterop": true,
         "skipLibCheck": true,
@@ -11,6 +12,6 @@
         "moduleResolution": "node"
     },
     "include": [
-        "index.ts"
+        "src/**/*.ts"
     ]
 }
