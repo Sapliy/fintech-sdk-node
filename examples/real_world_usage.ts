@@ -1,4 +1,4 @@
-import { SapliyClient } from '../index';
+import { SapliyClient } from '../src';
 
 async function runExample() {
     const client = new SapliyClient('sk_test_123', 'http://localhost:8080');
