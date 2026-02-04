@@ -11,7 +11,7 @@ Name | Type | Description | Notes
 ## Example
 
 ```typescript
-import { AuthInitiateSSORequest } from '@sapliyio/fintech';
+import { AuthInitiateSSORequest } from '@sapliyio/fintech-node-generated';
 
 const instance: AuthInitiateSSORequest = {
     email,

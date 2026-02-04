@@ -10,7 +10,7 @@ Name | Type | Description | Notes
 ## Example
 
 ```typescript
-import { AuthRemoveTeamMemberResponse } from '@sapliyio/fintech';
+import { AuthRemoveTeamMemberResponse } from '@sapliyio/fintech-node-generated';
 
 const instance: AuthRemoveTeamMemberResponse = {
     success,

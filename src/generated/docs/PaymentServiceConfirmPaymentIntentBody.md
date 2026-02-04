@@ -10,7 +10,7 @@ Name | Type | Description | Notes
 ## Example
 
 ```typescript
-import { PaymentServiceConfirmPaymentIntentBody } from '@sapliyio/fintech';
+import { PaymentServiceConfirmPaymentIntentBody } from '@sapliyio/fintech-node-generated';
 
 const instance: PaymentServiceConfirmPaymentIntentBody = {
     paymentMethodId,

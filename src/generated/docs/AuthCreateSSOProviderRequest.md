@@ -15,7 +15,7 @@ Name | Type | Description | Notes
 ## Example
 
 ```typescript
-import { AuthCreateSSOProviderRequest } from '@sapliyio/fintech';
+import { AuthCreateSSOProviderRequest } from '@sapliyio/fintech-node-generated';
 
 const instance: AuthCreateSSOProviderRequest = {
     orgId,

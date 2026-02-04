@@ -11,7 +11,7 @@ Name | Type | Description | Notes
 ## Example
 
 ```typescript
-import { BillingListSubscriptionsResponse } from '@sapliyio/fintech';
+import { BillingListSubscriptionsResponse } from '@sapliyio/fintech-node-generated';
 
 const instance: BillingListSubscriptionsResponse = {
     subscriptions,

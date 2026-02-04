@@ -18,7 +18,7 @@ Name | Type | Description | Notes
 ## Example
 
 ```typescript
-import { PaymentsPaymentIntent } from '@sapliyio/fintech';
+import { PaymentsPaymentIntent } from '@sapliyio/fintech-node-generated';
 
 const instance: PaymentsPaymentIntent = {
     id,

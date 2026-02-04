@@ -18,7 +18,7 @@ Name | Type | Description | Notes
 ## Example
 
 ```typescript
-import { AuthAuditLog } from '@sapliyio/fintech';
+import { AuthAuditLog } from '@sapliyio/fintech-node-generated';
 
 const instance: AuthAuditLog = {
     id,

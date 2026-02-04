@@ -10,7 +10,7 @@ Name | Type | Description | Notes
 ## Example
 
 ```typescript
-import { NotificationsDeleteWebhookEndpointResponse } from '@sapliyio/fintech';
+import { NotificationsDeleteWebhookEndpointResponse } from '@sapliyio/fintech-node-generated';
 
 const instance: NotificationsDeleteWebhookEndpointResponse = {
     success,

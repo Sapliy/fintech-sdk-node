@@ -13,7 +13,7 @@ Name | Type | Description | Notes
 ## Example
 
 ```typescript
-import { LedgerGetAccountResponse } from '@sapliyio/fintech';
+import { LedgerGetAccountResponse } from '@sapliyio/fintech-node-generated';
 
 const instance: LedgerGetAccountResponse = {
     accountId,

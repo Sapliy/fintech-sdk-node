@@ -10,7 +10,7 @@ Name | Type | Description | Notes
 ## Example
 
 ```typescript
-import { AuthInitiateSSOResponse } from '@sapliyio/fintech';
+import { AuthInitiateSSOResponse } from '@sapliyio/fintech-node-generated';
 
 const instance: AuthInitiateSSOResponse = {
     authUrl,

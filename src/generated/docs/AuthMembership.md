@@ -13,7 +13,7 @@ Name | Type | Description | Notes
 ## Example
 
 ```typescript
-import { AuthMembership } from '@sapliyio/fintech';
+import { AuthMembership } from '@sapliyio/fintech-node-generated';
 
 const instance: AuthMembership = {
     userId,

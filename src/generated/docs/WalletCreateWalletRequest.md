@@ -11,7 +11,7 @@ Name | Type | Description | Notes
 ## Example
 
 ```typescript
-import { WalletCreateWalletRequest } from '@sapliyio/fintech';
+import { WalletCreateWalletRequest } from '@sapliyio/fintech-node-generated';
 
 const instance: WalletCreateWalletRequest = {
     userId,

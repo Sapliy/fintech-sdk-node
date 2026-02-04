@@ -12,11 +12,13 @@ Name | Type | Description | Notes
 **orgId** | **string** |  | [optional] [default to undefined]
 **role** | **string** |  | [optional] [default to undefined]
 **rateLimitQuota** | **number** |  | [optional] [default to undefined]
+**zoneId** | **string** |  | [optional] [default to undefined]
+**mode** | **string** |  | [optional] [default to undefined]
 
 ## Example
 
 ```typescript
-import { AuthValidateKeyResponse } from '@sapliyio/fintech';
+import { AuthValidateKeyResponse } from '@sapliyio/fintech-node-generated';
 
 const instance: AuthValidateKeyResponse = {
     valid,
@@ -26,6 +28,8 @@ const instance: AuthValidateKeyResponse = {
     orgId,
     role,
     rateLimitQuota,
+    zoneId,
+    mode,
 };
 ```
 

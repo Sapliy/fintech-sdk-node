@@ -10,7 +10,7 @@ Name | Type | Description | Notes
 ## Example
 
 ```typescript
-import { AuthValidateTokenRequest } from '@sapliyio/fintech';
+import { AuthValidateTokenRequest } from '@sapliyio/fintech-node-generated';
 
 const instance: AuthValidateTokenRequest = {
     accessToken,

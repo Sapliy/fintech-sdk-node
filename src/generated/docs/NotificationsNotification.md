@@ -18,7 +18,7 @@ Name | Type | Description | Notes
 ## Example
 
 ```typescript
-import { NotificationsNotification } from '@sapliyio/fintech';
+import { NotificationsNotification } from '@sapliyio/fintech-node-generated';
 
 const instance: NotificationsNotification = {
     id,

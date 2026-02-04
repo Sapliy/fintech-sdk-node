@@ -13,7 +13,7 @@ Name | Type | Description | Notes
 ## Example
 
 ```typescript
-import { WalletWallet } from '@sapliyio/fintech';
+import { WalletWallet } from '@sapliyio/fintech-node-generated';
 
 const instance: WalletWallet = {
     id,

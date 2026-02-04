@@ -1,4 +1,4 @@
-## @sapliyio/fintech@version not set
+## @sapliyio/fintech-node-generated@version not set
 
 This generator creates TypeScript/JavaScript client that utilizes [axios](https://github.com/axios/axios). The generated Node module can be used in the following environments:
 
@@ -36,7 +36,7 @@ navigate to the folder of your consuming project and run one of the following co
 _published:_
 
 ```
-npm install @sapliyio/fintech@version not set --save
+npm install @sapliyio/fintech-node-generated@version not set --save
 ```
 
 _unPublished (not recommended):_
@@ -64,6 +64,15 @@ Class | Method | HTTP request | Description
 *BillingServiceApi* | [**billingServiceCreateSubscription**](docs/BillingServiceApi.md#billingservicecreatesubscription) | **POST** /v1/billing/subscriptions | 
 *BillingServiceApi* | [**billingServiceGetSubscription**](docs/BillingServiceApi.md#billingservicegetsubscription) | **GET** /v1/billing/subscriptions/{id} | 
 *BillingServiceApi* | [**billingServiceListSubscriptions**](docs/BillingServiceApi.md#billingservicelistsubscriptions) | **GET** /v1/billing/subscriptions | 
+*FlowServiceApi* | [**flowServiceBulkUpdateFlows**](docs/FlowServiceApi.md#flowservicebulkupdateflows) | **POST** /v1/flows/bulk-update | 
+*FlowServiceApi* | [**flowServiceCreateFlow**](docs/FlowServiceApi.md#flowservicecreateflow) | **POST** /v1/flows | 
+*FlowServiceApi* | [**flowServiceGetExecution**](docs/FlowServiceApi.md#flowservicegetexecution) | **GET** /v1/flows/executions/{id} | 
+*FlowServiceApi* | [**flowServiceGetFlow**](docs/FlowServiceApi.md#flowservicegetflow) | **GET** /v1/flows/{id} | 
+*FlowServiceApi* | [**flowServiceListFlows**](docs/FlowServiceApi.md#flowservicelistflows) | **GET** /v1/flows | 
+*FlowServiceApi* | [**flowServiceResumeExecution**](docs/FlowServiceApi.md#flowserviceresumeexecution) | **POST** /v1/flows/executions/{executionId}/resume | 
+*FlowServiceApi* | [**flowServiceUpdateFlow**](docs/FlowServiceApi.md#flowserviceupdateflow) | **PUT** /v1/flows/{id} | 
+*LedgerServiceApi* | [**ledgerServiceBulkRecordTransactions**](docs/LedgerServiceApi.md#ledgerservicebulkrecordtransactions) | **POST** /v1/ledger/bulk-transactions | 
+*LedgerServiceApi* | [**ledgerServiceCreateAccount**](docs/LedgerServiceApi.md#ledgerservicecreateaccount) | **POST** /v1/ledger/accounts | 
 *LedgerServiceApi* | [**ledgerServiceGetAccount**](docs/LedgerServiceApi.md#ledgerservicegetaccount) | **GET** /v1/ledger/accounts/{accountId} | 
 *LedgerServiceApi* | [**ledgerServiceRecordTransaction**](docs/LedgerServiceApi.md#ledgerservicerecordtransaction) | **POST** /v1/ledger/transactions | 
 *NotificationServiceApi* | [**notificationServiceCreateWebhookEndpoint**](docs/NotificationServiceApi.md#notificationservicecreatewebhookendpoint) | **POST** /v1/webhooks/endpoints | 
@@ -77,6 +86,11 @@ Class | Method | HTTP request | Description
 *WalletServiceApi* | [**walletServiceGetWallet**](docs/WalletServiceApi.md#walletservicegetwallet) | **GET** /v1/wallets/{userId} | 
 *WalletServiceApi* | [**walletServiceTopUp**](docs/WalletServiceApi.md#walletservicetopup) | **POST** /v1/wallets/top-up | 
 *WalletServiceApi* | [**walletServiceTransfer**](docs/WalletServiceApi.md#walletservicetransfer) | **POST** /v1/wallets/transfer | 
+*ZoneServiceApi* | [**zoneServiceBulkUpdateMetadata**](docs/ZoneServiceApi.md#zoneservicebulkupdatemetadata) | **POST** /v1/zones/bulk-metadata | 
+*ZoneServiceApi* | [**zoneServiceCreateZone**](docs/ZoneServiceApi.md#zoneservicecreatezone) | **POST** /v1/zones | 
+*ZoneServiceApi* | [**zoneServiceGetZone**](docs/ZoneServiceApi.md#zoneservicegetzone) | **GET** /v1/zones/{id} | 
+*ZoneServiceApi* | [**zoneServiceListZones**](docs/ZoneServiceApi.md#zoneservicelistzones) | **GET** /v1/zones | 
+*ZoneServiceApi* | [**zoneServiceUpdateZone**](docs/ZoneServiceApi.md#zoneserviceupdatezone) | **PUT** /v1/zones/{id} | 
 
 
 ### Documentation For Models
@@ -98,6 +112,20 @@ Class | Method | HTTP request | Description
  - [BillingCreateSubscriptionRequest](docs/BillingCreateSubscriptionRequest.md)
  - [BillingListSubscriptionsResponse](docs/BillingListSubscriptionsResponse.md)
  - [BillingSubscription](docs/BillingSubscription.md)
+ - [FlowBulkUpdateFlowsRequest](docs/FlowBulkUpdateFlowsRequest.md)
+ - [FlowBulkUpdateFlowsResponse](docs/FlowBulkUpdateFlowsResponse.md)
+ - [FlowCreateFlowRequest](docs/FlowCreateFlowRequest.md)
+ - [FlowExecutionStep](docs/FlowExecutionStep.md)
+ - [FlowFlow](docs/FlowFlow.md)
+ - [FlowFlowExecution](docs/FlowFlowExecution.md)
+ - [FlowListFlowsResponse](docs/FlowListFlowsResponse.md)
+ - [FlowResumeExecutionResponse](docs/FlowResumeExecutionResponse.md)
+ - [FlowServiceResumeExecutionBody](docs/FlowServiceResumeExecutionBody.md)
+ - [FlowServiceUpdateFlowBody](docs/FlowServiceUpdateFlowBody.md)
+ - [LedgerBulkRecordRequest](docs/LedgerBulkRecordRequest.md)
+ - [LedgerBulkRecordResponse](docs/LedgerBulkRecordResponse.md)
+ - [LedgerCreateAccountRequest](docs/LedgerCreateAccountRequest.md)
+ - [LedgerCreateAccountResponse](docs/LedgerCreateAccountResponse.md)
  - [LedgerGetAccountResponse](docs/LedgerGetAccountResponse.md)
  - [LedgerRecordTransactionRequest](docs/LedgerRecordTransactionRequest.md)
  - [LedgerRecordTransactionResponse](docs/LedgerRecordTransactionResponse.md)
@@ -117,6 +145,12 @@ Class | Method | HTTP request | Description
  - [WalletTransactionResponse](docs/WalletTransactionResponse.md)
  - [WalletTransferRequest](docs/WalletTransferRequest.md)
  - [WalletWallet](docs/WalletWallet.md)
+ - [ZoneBulkUpdateMetadataRequest](docs/ZoneBulkUpdateMetadataRequest.md)
+ - [ZoneBulkUpdateMetadataResponse](docs/ZoneBulkUpdateMetadataResponse.md)
+ - [ZoneCreateZoneRequest](docs/ZoneCreateZoneRequest.md)
+ - [ZoneListZonesResponse](docs/ZoneListZonesResponse.md)
+ - [ZoneServiceUpdateZoneBody](docs/ZoneServiceUpdateZoneBody.md)
+ - [ZoneZone](docs/ZoneZone.md)
 
 
 <a id="documentation-for-authorization"></a>

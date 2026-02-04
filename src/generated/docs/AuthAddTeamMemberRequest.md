@@ -12,7 +12,7 @@ Name | Type | Description | Notes
 ## Example
 
 ```typescript
-import { AuthAddTeamMemberRequest } from '@sapliyio/fintech';
+import { AuthAddTeamMemberRequest } from '@sapliyio/fintech-node-generated';
 
 const instance: AuthAddTeamMemberRequest = {
     orgId,

@@ -25,7 +25,7 @@ import {
     AuthServiceApi,
     Configuration,
     AuthAddTeamMemberRequest
-} from '@sapliyio/fintech';
+} from '@sapliyio/fintech-node-generated';
 
 const configuration = new Configuration();
 const apiInstance = new AuthServiceApi(configuration);
@@ -77,7 +77,7 @@ import {
     AuthServiceApi,
     Configuration,
     AuthCreateSSOProviderRequest
-} from '@sapliyio/fintech';
+} from '@sapliyio/fintech-node-generated';
 
 const configuration = new Configuration();
 const apiInstance = new AuthServiceApi(configuration);
@@ -128,7 +128,7 @@ No authorization required
 import {
     AuthServiceApi,
     Configuration
-} from '@sapliyio/fintech';
+} from '@sapliyio/fintech-node-generated';
 
 const configuration = new Configuration();
 const apiInstance = new AuthServiceApi(configuration);
@@ -188,7 +188,7 @@ No authorization required
 import {
     AuthServiceApi,
     Configuration
-} from '@sapliyio/fintech';
+} from '@sapliyio/fintech-node-generated';
 
 const configuration = new Configuration();
 const apiInstance = new AuthServiceApi(configuration);
@@ -240,7 +240,7 @@ import {
     AuthServiceApi,
     Configuration,
     AuthInitiateSSORequest
-} from '@sapliyio/fintech';
+} from '@sapliyio/fintech-node-generated';
 
 const configuration = new Configuration();
 const apiInstance = new AuthServiceApi(configuration);
@@ -291,7 +291,7 @@ No authorization required
 import {
     AuthServiceApi,
     Configuration
-} from '@sapliyio/fintech';
+} from '@sapliyio/fintech-node-generated';
 
 const configuration = new Configuration();
 const apiInstance = new AuthServiceApi(configuration);
@@ -342,7 +342,7 @@ No authorization required
 import {
     AuthServiceApi,
     Configuration
-} from '@sapliyio/fintech';
+} from '@sapliyio/fintech-node-generated';
 
 const configuration = new Configuration();
 const apiInstance = new AuthServiceApi(configuration);
@@ -397,7 +397,7 @@ import {
     AuthServiceApi,
     Configuration,
     AuthValidateKeyRequest
-} from '@sapliyio/fintech';
+} from '@sapliyio/fintech-node-generated';
 
 const configuration = new Configuration();
 const apiInstance = new AuthServiceApi(configuration);
@@ -449,7 +449,7 @@ import {
     AuthServiceApi,
     Configuration,
     AuthValidateTokenRequest
-} from '@sapliyio/fintech';
+} from '@sapliyio/fintech-node-generated';
 
 const configuration = new Configuration();
 const apiInstance = new AuthServiceApi(configuration);

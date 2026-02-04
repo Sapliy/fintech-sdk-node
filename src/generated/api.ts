@@ -90,6 +90,8 @@ export interface AuthValidateKeyResponse {
     'orgId'?: string;
     'role'?: string;
     'rateLimitQuota'?: number;
+    'zoneId'?: string;
+    'mode'?: string;
 }
 export interface AuthValidateTokenRequest {
     'accessToken'?: string;
@@ -121,6 +123,80 @@ export interface BillingSubscription {
     'createdAt'?: string;
     'canceledAt'?: string;
 }
+export interface FlowBulkUpdateFlowsRequest {
+    'flowIds'?: Array<string>;
+    'enabled'?: boolean;
+}
+export interface FlowBulkUpdateFlowsResponse {
+    'updatedCount'?: number;
+}
+export interface FlowCreateFlowRequest {
+    'zoneId'?: string;
+    'name'?: string;
+    'nodesJson'?: string;
+    'edgesJson'?: string;
+}
+export interface FlowExecutionStep {
+    'nodeId'?: string;
+    'status'?: string;
+    'inputJson'?: string;
+    'outputJson'?: string;
+    'error'?: string;
+    'startedAt'?: string;
+}
+export interface FlowFlow {
+    'id'?: string;
+    'zoneId'?: string;
+    'name'?: string;
+    'enabled'?: boolean;
+    'nodesJson'?: string;
+    'edgesJson'?: string;
+    'createdAt'?: string;
+    'updatedAt'?: string;
+}
+export interface FlowFlowExecution {
+    'id'?: string;
+    'flowId'?: string;
+    'status'?: string;
+    'currentNodeId'?: string;
+    'inputJson'?: string;
+    'metadataJson'?: string;
+    'steps'?: Array<FlowExecutionStep>;
+    'startedAt'?: string;
+    'finishedAt'?: string;
+}
+export interface FlowListFlowsResponse {
+    'flows'?: Array<FlowFlow>;
+}
+export interface FlowResumeExecutionResponse {
+    'status'?: string;
+}
+export interface FlowServiceResumeExecutionBody {
+    'overridesJson'?: string;
+}
+export interface FlowServiceUpdateFlowBody {
+    'name'?: string;
+    'enabled'?: boolean;
+    'nodesJson'?: string;
+    'edgesJson'?: string;
+}
+export interface LedgerBulkRecordRequest {
+    'transactions'?: Array<LedgerRecordTransactionRequest>;
+}
+export interface LedgerBulkRecordResponse {
+    'responses'?: Array<LedgerRecordTransactionResponse>;
+}
+export interface LedgerCreateAccountRequest {
+    'name'?: string;
+    'type'?: string;
+    'currency'?: string;
+    'zoneId'?: string;
+    'mode'?: string;
+}
+export interface LedgerCreateAccountResponse {
+    'accountId'?: string;
+    'status'?: string;
+}
 export interface LedgerGetAccountResponse {
     'accountId'?: string;
     'balance'?: string;
@@ -133,6 +209,8 @@ export interface LedgerRecordTransactionRequest {
     'currency'?: string;
     'description'?: string;
     'referenceId'?: string;
+    'zoneId'?: string;
+    'mode'?: string;
 }
 export interface LedgerRecordTransactionResponse {
     'transactionId'?: string;
@@ -228,6 +306,40 @@ export interface WalletWallet {
     'userId'?: string;
     'balance'?: string;
     'currency'?: string;
+}
+export interface ZoneBulkUpdateMetadataRequest {
+    'zoneIds'?: Array<string>;
+    'metadata'?: { [key: string]: string; };
+}
+export interface ZoneBulkUpdateMetadataResponse {
+    'updatedCount'?: number;
+}
+export interface ZoneCreateZoneRequest {
+    'orgId'?: string;
+    'name'?: string;
+    'mode'?: string;
+    'templateName'?: string;
+    'metadata'?: { [key: string]: string; };
+}
+export interface ZoneListZonesResponse {
+    'zones'?: Array<ZoneZone>;
+}
+export interface ZoneServiceUpdateZoneBody {
+    'name'?: string;
+    'status'?: string;
+    'metadata'?: { [key: string]: string; };
+}
+export interface ZoneZone {
+    'id'?: string;
+    'orgId'?: string;
+    'name'?: string;
+    'mode'?: string;
+    'secretKey'?: string;
+    'publishableKey'?: string;
+    'status'?: string;
+    'templateName'?: string;
+    'metadata'?: { [key: string]: string; };
+    'createdAt'?: string;
 }
 
 /**
@@ -778,91 +890,9 @@ export const AuthServiceApiFactory = function (configuration?: Configuration, ba
 };
 
 /**
- * AuthServiceApi - interface
- */
-export interface AuthServiceApiInterface {
-    /**
-     * 
-     * @param {AuthAddTeamMemberRequest} body 
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     */
-    authServiceAddTeamMember(body: AuthAddTeamMemberRequest, options?: RawAxiosRequestConfig): AxiosPromise<AuthMembership>;
-
-    /**
-     * 
-     * @param {AuthCreateSSOProviderRequest} body 
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     */
-    authServiceCreateSSOProvider(body: AuthCreateSSOProviderRequest, options?: RawAxiosRequestConfig): AxiosPromise<AuthSSOProvider>;
-
-    /**
-     * 
-     * @param {string} [orgId] 
-     * @param {number} [limit] 
-     * @param {number} [offset] 
-     * @param {string} [action] 
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     */
-    authServiceGetAuditLogs(orgId?: string, limit?: number, offset?: number, action?: string, options?: RawAxiosRequestConfig): AxiosPromise<AuthGetAuditLogsResponse>;
-
-    /**
-     * 
-     * @param {string} id 
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     */
-    authServiceGetSSOProvider(id: string, options?: RawAxiosRequestConfig): AxiosPromise<AuthSSOProvider>;
-
-    /**
-     * 
-     * @param {AuthInitiateSSORequest} body 
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     */
-    authServiceInitiateSSO(body: AuthInitiateSSORequest, options?: RawAxiosRequestConfig): AxiosPromise<AuthInitiateSSOResponse>;
-
-    /**
-     * 
-     * @param {string} orgId 
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     */
-    authServiceListTeamMembers(orgId: string, options?: RawAxiosRequestConfig): AxiosPromise<AuthListTeamMembersResponse>;
-
-    /**
-     * 
-     * @param {string} [orgId] 
-     * @param {string} [userId] 
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     */
-    authServiceRemoveTeamMember(orgId?: string, userId?: string, options?: RawAxiosRequestConfig): AxiosPromise<AuthRemoveTeamMemberResponse>;
-
-    /**
-     * 
-     * @param {AuthValidateKeyRequest} body 
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     */
-    authServiceValidateKey(body: AuthValidateKeyRequest, options?: RawAxiosRequestConfig): AxiosPromise<AuthValidateKeyResponse>;
-
-    /**
-     * 
-     * @param {AuthValidateTokenRequest} body 
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     */
-    authServiceValidateToken(body: AuthValidateTokenRequest, options?: RawAxiosRequestConfig): AxiosPromise<AuthValidateTokenResponse>;
-
-}
-
-/**
  * AuthServiceApi - object-oriented interface
  */
-export class AuthServiceApi extends BaseAPI implements AuthServiceApiInterface {
+export class AuthServiceApi extends BaseAPI {
     /**
      * 
      * @param {AuthAddTeamMemberRequest} body 
@@ -1233,51 +1263,9 @@ export const BillingServiceApiFactory = function (configuration?: Configuration,
 };
 
 /**
- * BillingServiceApi - interface
- */
-export interface BillingServiceApiInterface {
-    /**
-     * 
-     * @param {string} id 
-     * @param {object} body 
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     */
-    billingServiceCancelSubscription(id: string, body: object, options?: RawAxiosRequestConfig): AxiosPromise<BillingSubscription>;
-
-    /**
-     * 
-     * @param {BillingCreateSubscriptionRequest} body 
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     */
-    billingServiceCreateSubscription(body: BillingCreateSubscriptionRequest, options?: RawAxiosRequestConfig): AxiosPromise<BillingSubscription>;
-
-    /**
-     * 
-     * @param {string} id 
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     */
-    billingServiceGetSubscription(id: string, options?: RawAxiosRequestConfig): AxiosPromise<BillingSubscription>;
-
-    /**
-     * 
-     * @param {string} [userId] 
-     * @param {string} [orgId] 
-     * @param {number} [limit] 
-     * @param {number} [offset] 
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     */
-    billingServiceListSubscriptions(userId?: string, orgId?: string, limit?: number, offset?: number, options?: RawAxiosRequestConfig): AxiosPromise<BillingListSubscriptionsResponse>;
-
-}
-
-/**
  * BillingServiceApi - object-oriented interface
  */
-export class BillingServiceApi extends BaseAPI implements BillingServiceApiInterface {
+export class BillingServiceApi extends BaseAPI {
     /**
      * 
      * @param {string} id 
@@ -1326,10 +1314,578 @@ export class BillingServiceApi extends BaseAPI implements BillingServiceApiInter
 
 
 /**
+ * FlowServiceApi - axios parameter creator
+ */
+export const FlowServiceApiAxiosParamCreator = function (configuration?: Configuration) {
+    return {
+        /**
+         * 
+         * @param {FlowBulkUpdateFlowsRequest} body 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        flowServiceBulkUpdateFlows: async (body: FlowBulkUpdateFlowsRequest, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+            // verify required parameter 'body' is not null or undefined
+            assertParamExists('flowServiceBulkUpdateFlows', 'body', body)
+            const localVarPath = `/v1/flows/bulk-update`;
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'POST', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+            localVarHeaderParameter['Content-Type'] = 'application/json';
+            localVarHeaderParameter['Accept'] = 'application/json';
+
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+            localVarRequestOptions.data = serializeDataIfNeeded(body, localVarRequestOptions, configuration)
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * 
+         * @param {FlowCreateFlowRequest} body 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        flowServiceCreateFlow: async (body: FlowCreateFlowRequest, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+            // verify required parameter 'body' is not null or undefined
+            assertParamExists('flowServiceCreateFlow', 'body', body)
+            const localVarPath = `/v1/flows`;
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'POST', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+            localVarHeaderParameter['Content-Type'] = 'application/json';
+            localVarHeaderParameter['Accept'] = 'application/json';
+
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+            localVarRequestOptions.data = serializeDataIfNeeded(body, localVarRequestOptions, configuration)
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * 
+         * @param {string} id 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        flowServiceGetExecution: async (id: string, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+            // verify required parameter 'id' is not null or undefined
+            assertParamExists('flowServiceGetExecution', 'id', id)
+            const localVarPath = `/v1/flows/executions/{id}`
+                .replace(`{${"id"}}`, encodeURIComponent(String(id)));
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'GET', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+            localVarHeaderParameter['Accept'] = 'application/json';
+
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * 
+         * @param {string} id 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        flowServiceGetFlow: async (id: string, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+            // verify required parameter 'id' is not null or undefined
+            assertParamExists('flowServiceGetFlow', 'id', id)
+            const localVarPath = `/v1/flows/{id}`
+                .replace(`{${"id"}}`, encodeURIComponent(String(id)));
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'GET', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+            localVarHeaderParameter['Accept'] = 'application/json';
+
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * 
+         * @param {string} [zoneId] 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        flowServiceListFlows: async (zoneId?: string, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+            const localVarPath = `/v1/flows`;
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'GET', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+            if (zoneId !== undefined) {
+                localVarQueryParameter['zoneId'] = zoneId;
+            }
+
+            localVarHeaderParameter['Accept'] = 'application/json';
+
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * 
+         * @param {string} executionId 
+         * @param {FlowServiceResumeExecutionBody} body 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        flowServiceResumeExecution: async (executionId: string, body: FlowServiceResumeExecutionBody, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+            // verify required parameter 'executionId' is not null or undefined
+            assertParamExists('flowServiceResumeExecution', 'executionId', executionId)
+            // verify required parameter 'body' is not null or undefined
+            assertParamExists('flowServiceResumeExecution', 'body', body)
+            const localVarPath = `/v1/flows/executions/{executionId}/resume`
+                .replace(`{${"executionId"}}`, encodeURIComponent(String(executionId)));
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'POST', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+            localVarHeaderParameter['Content-Type'] = 'application/json';
+            localVarHeaderParameter['Accept'] = 'application/json';
+
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+            localVarRequestOptions.data = serializeDataIfNeeded(body, localVarRequestOptions, configuration)
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * 
+         * @param {string} id 
+         * @param {FlowServiceUpdateFlowBody} body 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        flowServiceUpdateFlow: async (id: string, body: FlowServiceUpdateFlowBody, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+            // verify required parameter 'id' is not null or undefined
+            assertParamExists('flowServiceUpdateFlow', 'id', id)
+            // verify required parameter 'body' is not null or undefined
+            assertParamExists('flowServiceUpdateFlow', 'body', body)
+            const localVarPath = `/v1/flows/{id}`
+                .replace(`{${"id"}}`, encodeURIComponent(String(id)));
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'PUT', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+            localVarHeaderParameter['Content-Type'] = 'application/json';
+            localVarHeaderParameter['Accept'] = 'application/json';
+
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+            localVarRequestOptions.data = serializeDataIfNeeded(body, localVarRequestOptions, configuration)
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+    }
+};
+
+/**
+ * FlowServiceApi - functional programming interface
+ */
+export const FlowServiceApiFp = function(configuration?: Configuration) {
+    const localVarAxiosParamCreator = FlowServiceApiAxiosParamCreator(configuration)
+    return {
+        /**
+         * 
+         * @param {FlowBulkUpdateFlowsRequest} body 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async flowServiceBulkUpdateFlows(body: FlowBulkUpdateFlowsRequest, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<FlowBulkUpdateFlowsResponse>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.flowServiceBulkUpdateFlows(body, options);
+            const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
+            const localVarOperationServerBasePath = operationServerMap['FlowServiceApi.flowServiceBulkUpdateFlows']?.[localVarOperationServerIndex]?.url;
+            return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
+        },
+        /**
+         * 
+         * @param {FlowCreateFlowRequest} body 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async flowServiceCreateFlow(body: FlowCreateFlowRequest, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<FlowFlow>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.flowServiceCreateFlow(body, options);
+            const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
+            const localVarOperationServerBasePath = operationServerMap['FlowServiceApi.flowServiceCreateFlow']?.[localVarOperationServerIndex]?.url;
+            return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
+        },
+        /**
+         * 
+         * @param {string} id 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async flowServiceGetExecution(id: string, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<FlowFlowExecution>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.flowServiceGetExecution(id, options);
+            const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
+            const localVarOperationServerBasePath = operationServerMap['FlowServiceApi.flowServiceGetExecution']?.[localVarOperationServerIndex]?.url;
+            return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
+        },
+        /**
+         * 
+         * @param {string} id 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async flowServiceGetFlow(id: string, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<FlowFlow>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.flowServiceGetFlow(id, options);
+            const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
+            const localVarOperationServerBasePath = operationServerMap['FlowServiceApi.flowServiceGetFlow']?.[localVarOperationServerIndex]?.url;
+            return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
+        },
+        /**
+         * 
+         * @param {string} [zoneId] 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async flowServiceListFlows(zoneId?: string, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<FlowListFlowsResponse>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.flowServiceListFlows(zoneId, options);
+            const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
+            const localVarOperationServerBasePath = operationServerMap['FlowServiceApi.flowServiceListFlows']?.[localVarOperationServerIndex]?.url;
+            return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
+        },
+        /**
+         * 
+         * @param {string} executionId 
+         * @param {FlowServiceResumeExecutionBody} body 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async flowServiceResumeExecution(executionId: string, body: FlowServiceResumeExecutionBody, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<FlowResumeExecutionResponse>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.flowServiceResumeExecution(executionId, body, options);
+            const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
+            const localVarOperationServerBasePath = operationServerMap['FlowServiceApi.flowServiceResumeExecution']?.[localVarOperationServerIndex]?.url;
+            return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
+        },
+        /**
+         * 
+         * @param {string} id 
+         * @param {FlowServiceUpdateFlowBody} body 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async flowServiceUpdateFlow(id: string, body: FlowServiceUpdateFlowBody, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<FlowFlow>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.flowServiceUpdateFlow(id, body, options);
+            const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
+            const localVarOperationServerBasePath = operationServerMap['FlowServiceApi.flowServiceUpdateFlow']?.[localVarOperationServerIndex]?.url;
+            return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
+        },
+    }
+};
+
+/**
+ * FlowServiceApi - factory interface
+ */
+export const FlowServiceApiFactory = function (configuration?: Configuration, basePath?: string, axios?: AxiosInstance) {
+    const localVarFp = FlowServiceApiFp(configuration)
+    return {
+        /**
+         * 
+         * @param {FlowBulkUpdateFlowsRequest} body 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        flowServiceBulkUpdateFlows(body: FlowBulkUpdateFlowsRequest, options?: RawAxiosRequestConfig): AxiosPromise<FlowBulkUpdateFlowsResponse> {
+            return localVarFp.flowServiceBulkUpdateFlows(body, options).then((request) => request(axios, basePath));
+        },
+        /**
+         * 
+         * @param {FlowCreateFlowRequest} body 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        flowServiceCreateFlow(body: FlowCreateFlowRequest, options?: RawAxiosRequestConfig): AxiosPromise<FlowFlow> {
+            return localVarFp.flowServiceCreateFlow(body, options).then((request) => request(axios, basePath));
+        },
+        /**
+         * 
+         * @param {string} id 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        flowServiceGetExecution(id: string, options?: RawAxiosRequestConfig): AxiosPromise<FlowFlowExecution> {
+            return localVarFp.flowServiceGetExecution(id, options).then((request) => request(axios, basePath));
+        },
+        /**
+         * 
+         * @param {string} id 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        flowServiceGetFlow(id: string, options?: RawAxiosRequestConfig): AxiosPromise<FlowFlow> {
+            return localVarFp.flowServiceGetFlow(id, options).then((request) => request(axios, basePath));
+        },
+        /**
+         * 
+         * @param {string} [zoneId] 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        flowServiceListFlows(zoneId?: string, options?: RawAxiosRequestConfig): AxiosPromise<FlowListFlowsResponse> {
+            return localVarFp.flowServiceListFlows(zoneId, options).then((request) => request(axios, basePath));
+        },
+        /**
+         * 
+         * @param {string} executionId 
+         * @param {FlowServiceResumeExecutionBody} body 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        flowServiceResumeExecution(executionId: string, body: FlowServiceResumeExecutionBody, options?: RawAxiosRequestConfig): AxiosPromise<FlowResumeExecutionResponse> {
+            return localVarFp.flowServiceResumeExecution(executionId, body, options).then((request) => request(axios, basePath));
+        },
+        /**
+         * 
+         * @param {string} id 
+         * @param {FlowServiceUpdateFlowBody} body 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        flowServiceUpdateFlow(id: string, body: FlowServiceUpdateFlowBody, options?: RawAxiosRequestConfig): AxiosPromise<FlowFlow> {
+            return localVarFp.flowServiceUpdateFlow(id, body, options).then((request) => request(axios, basePath));
+        },
+    };
+};
+
+/**
+ * FlowServiceApi - object-oriented interface
+ */
+export class FlowServiceApi extends BaseAPI {
+    /**
+     * 
+     * @param {FlowBulkUpdateFlowsRequest} body 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    public flowServiceBulkUpdateFlows(body: FlowBulkUpdateFlowsRequest, options?: RawAxiosRequestConfig) {
+        return FlowServiceApiFp(this.configuration).flowServiceBulkUpdateFlows(body, options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * 
+     * @param {FlowCreateFlowRequest} body 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    public flowServiceCreateFlow(body: FlowCreateFlowRequest, options?: RawAxiosRequestConfig) {
+        return FlowServiceApiFp(this.configuration).flowServiceCreateFlow(body, options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * 
+     * @param {string} id 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    public flowServiceGetExecution(id: string, options?: RawAxiosRequestConfig) {
+        return FlowServiceApiFp(this.configuration).flowServiceGetExecution(id, options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * 
+     * @param {string} id 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    public flowServiceGetFlow(id: string, options?: RawAxiosRequestConfig) {
+        return FlowServiceApiFp(this.configuration).flowServiceGetFlow(id, options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * 
+     * @param {string} [zoneId] 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    public flowServiceListFlows(zoneId?: string, options?: RawAxiosRequestConfig) {
+        return FlowServiceApiFp(this.configuration).flowServiceListFlows(zoneId, options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * 
+     * @param {string} executionId 
+     * @param {FlowServiceResumeExecutionBody} body 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    public flowServiceResumeExecution(executionId: string, body: FlowServiceResumeExecutionBody, options?: RawAxiosRequestConfig) {
+        return FlowServiceApiFp(this.configuration).flowServiceResumeExecution(executionId, body, options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * 
+     * @param {string} id 
+     * @param {FlowServiceUpdateFlowBody} body 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    public flowServiceUpdateFlow(id: string, body: FlowServiceUpdateFlowBody, options?: RawAxiosRequestConfig) {
+        return FlowServiceApiFp(this.configuration).flowServiceUpdateFlow(id, body, options).then((request) => request(this.axios, this.basePath));
+    }
+}
+
+
+
+/**
  * LedgerServiceApi - axios parameter creator
  */
 export const LedgerServiceApiAxiosParamCreator = function (configuration?: Configuration) {
     return {
+        /**
+         * 
+         * @param {LedgerBulkRecordRequest} body 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        ledgerServiceBulkRecordTransactions: async (body: LedgerBulkRecordRequest, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+            // verify required parameter 'body' is not null or undefined
+            assertParamExists('ledgerServiceBulkRecordTransactions', 'body', body)
+            const localVarPath = `/v1/ledger/bulk-transactions`;
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'POST', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+            localVarHeaderParameter['Content-Type'] = 'application/json';
+            localVarHeaderParameter['Accept'] = 'application/json';
+
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+            localVarRequestOptions.data = serializeDataIfNeeded(body, localVarRequestOptions, configuration)
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * 
+         * @param {LedgerCreateAccountRequest} body 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        ledgerServiceCreateAccount: async (body: LedgerCreateAccountRequest, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+            // verify required parameter 'body' is not null or undefined
+            assertParamExists('ledgerServiceCreateAccount', 'body', body)
+            const localVarPath = `/v1/ledger/accounts`;
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'POST', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+            localVarHeaderParameter['Content-Type'] = 'application/json';
+            localVarHeaderParameter['Accept'] = 'application/json';
+
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+            localVarRequestOptions.data = serializeDataIfNeeded(body, localVarRequestOptions, configuration)
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
         /**
          * 
          * @param {string} accountId 
@@ -1408,6 +1964,30 @@ export const LedgerServiceApiFp = function(configuration?: Configuration) {
     return {
         /**
          * 
+         * @param {LedgerBulkRecordRequest} body 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async ledgerServiceBulkRecordTransactions(body: LedgerBulkRecordRequest, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<LedgerBulkRecordResponse>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.ledgerServiceBulkRecordTransactions(body, options);
+            const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
+            const localVarOperationServerBasePath = operationServerMap['LedgerServiceApi.ledgerServiceBulkRecordTransactions']?.[localVarOperationServerIndex]?.url;
+            return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
+        },
+        /**
+         * 
+         * @param {LedgerCreateAccountRequest} body 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async ledgerServiceCreateAccount(body: LedgerCreateAccountRequest, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<LedgerCreateAccountResponse>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.ledgerServiceCreateAccount(body, options);
+            const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
+            const localVarOperationServerBasePath = operationServerMap['LedgerServiceApi.ledgerServiceCreateAccount']?.[localVarOperationServerIndex]?.url;
+            return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
+        },
+        /**
+         * 
          * @param {string} accountId 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
@@ -1441,6 +2021,24 @@ export const LedgerServiceApiFactory = function (configuration?: Configuration, 
     return {
         /**
          * 
+         * @param {LedgerBulkRecordRequest} body 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        ledgerServiceBulkRecordTransactions(body: LedgerBulkRecordRequest, options?: RawAxiosRequestConfig): AxiosPromise<LedgerBulkRecordResponse> {
+            return localVarFp.ledgerServiceBulkRecordTransactions(body, options).then((request) => request(axios, basePath));
+        },
+        /**
+         * 
+         * @param {LedgerCreateAccountRequest} body 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        ledgerServiceCreateAccount(body: LedgerCreateAccountRequest, options?: RawAxiosRequestConfig): AxiosPromise<LedgerCreateAccountResponse> {
+            return localVarFp.ledgerServiceCreateAccount(body, options).then((request) => request(axios, basePath));
+        },
+        /**
+         * 
          * @param {string} accountId 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
@@ -1461,31 +2059,29 @@ export const LedgerServiceApiFactory = function (configuration?: Configuration, 
 };
 
 /**
- * LedgerServiceApi - interface
- */
-export interface LedgerServiceApiInterface {
-    /**
-     * 
-     * @param {string} accountId 
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     */
-    ledgerServiceGetAccount(accountId: string, options?: RawAxiosRequestConfig): AxiosPromise<LedgerGetAccountResponse>;
-
-    /**
-     * 
-     * @param {LedgerRecordTransactionRequest} body 
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     */
-    ledgerServiceRecordTransaction(body: LedgerRecordTransactionRequest, options?: RawAxiosRequestConfig): AxiosPromise<LedgerRecordTransactionResponse>;
-
-}
-
-/**
  * LedgerServiceApi - object-oriented interface
  */
-export class LedgerServiceApi extends BaseAPI implements LedgerServiceApiInterface {
+export class LedgerServiceApi extends BaseAPI {
+    /**
+     * 
+     * @param {LedgerBulkRecordRequest} body 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    public ledgerServiceBulkRecordTransactions(body: LedgerBulkRecordRequest, options?: RawAxiosRequestConfig) {
+        return LedgerServiceApiFp(this.configuration).ledgerServiceBulkRecordTransactions(body, options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * 
+     * @param {LedgerCreateAccountRequest} body 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    public ledgerServiceCreateAccount(body: LedgerCreateAccountRequest, options?: RawAxiosRequestConfig) {
+        return LedgerServiceApiFp(this.configuration).ledgerServiceCreateAccount(body, options).then((request) => request(this.axios, this.basePath));
+    }
+
     /**
      * 
      * @param {string} accountId 
@@ -1762,48 +2358,9 @@ export const NotificationServiceApiFactory = function (configuration?: Configura
 };
 
 /**
- * NotificationServiceApi - interface
- */
-export interface NotificationServiceApiInterface {
-    /**
-     * 
-     * @param {NotificationsCreateWebhookEndpointRequest} body 
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     */
-    notificationServiceCreateWebhookEndpoint(body: NotificationsCreateWebhookEndpointRequest, options?: RawAxiosRequestConfig): AxiosPromise<NotificationsWebhookEndpoint>;
-
-    /**
-     * 
-     * @param {string} id 
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     */
-    notificationServiceDeleteWebhookEndpoint(id: string, options?: RawAxiosRequestConfig): AxiosPromise<NotificationsDeleteWebhookEndpointResponse>;
-
-    /**
-     * 
-     * @param {string} [userId] 
-     * @param {number} [limit] 
-     * @param {number} [offset] 
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     */
-    notificationServiceGetNotificationHistory(userId?: string, limit?: number, offset?: number, options?: RawAxiosRequestConfig): AxiosPromise<NotificationsGetNotificationHistoryResponse>;
-
-    /**
-     * 
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     */
-    notificationServiceListWebhookEndpoints(options?: RawAxiosRequestConfig): AxiosPromise<NotificationsListWebhookEndpointsResponse>;
-
-}
-
-/**
  * NotificationServiceApi - object-oriented interface
  */
-export class NotificationServiceApi extends BaseAPI implements NotificationServiceApiInterface {
+export class NotificationServiceApi extends BaseAPI {
     /**
      * 
      * @param {NotificationsCreateWebhookEndpointRequest} body 
@@ -2052,41 +2609,9 @@ export const PaymentServiceApiFactory = function (configuration?: Configuration,
 };
 
 /**
- * PaymentServiceApi - interface
- */
-export interface PaymentServiceApiInterface {
-    /**
-     * 
-     * @param {string} id 
-     * @param {PaymentServiceConfirmPaymentIntentBody} body 
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     */
-    paymentServiceConfirmPaymentIntent(id: string, body: PaymentServiceConfirmPaymentIntentBody, options?: RawAxiosRequestConfig): AxiosPromise<PaymentsPaymentIntent>;
-
-    /**
-     * 
-     * @param {PaymentsCreatePaymentIntentRequest} body 
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     */
-    paymentServiceCreatePaymentIntent(body: PaymentsCreatePaymentIntentRequest, options?: RawAxiosRequestConfig): AxiosPromise<PaymentsPaymentIntent>;
-
-    /**
-     * 
-     * @param {string} id 
-     * @param {object} body 
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     */
-    paymentServiceRefundPaymentIntent(id: string, body: object, options?: RawAxiosRequestConfig): AxiosPromise<PaymentsPaymentIntent>;
-
-}
-
-/**
  * PaymentServiceApi - object-oriented interface
  */
-export class PaymentServiceApi extends BaseAPI implements PaymentServiceApiInterface {
+export class PaymentServiceApi extends BaseAPI {
     /**
      * 
      * @param {string} id 
@@ -2368,47 +2893,9 @@ export const WalletServiceApiFactory = function (configuration?: Configuration, 
 };
 
 /**
- * WalletServiceApi - interface
- */
-export interface WalletServiceApiInterface {
-    /**
-     * 
-     * @param {WalletCreateWalletRequest} body 
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     */
-    walletServiceCreateWallet(body: WalletCreateWalletRequest, options?: RawAxiosRequestConfig): AxiosPromise<WalletWallet>;
-
-    /**
-     * 
-     * @param {string} userId 
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     */
-    walletServiceGetWallet(userId: string, options?: RawAxiosRequestConfig): AxiosPromise<WalletWallet>;
-
-    /**
-     * 
-     * @param {WalletTopUpRequest} body 
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     */
-    walletServiceTopUp(body: WalletTopUpRequest, options?: RawAxiosRequestConfig): AxiosPromise<WalletTransactionResponse>;
-
-    /**
-     * 
-     * @param {WalletTransferRequest} body 
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     */
-    walletServiceTransfer(body: WalletTransferRequest, options?: RawAxiosRequestConfig): AxiosPromise<WalletTransactionResponse>;
-
-}
-
-/**
  * WalletServiceApi - object-oriented interface
  */
-export class WalletServiceApi extends BaseAPI implements WalletServiceApiInterface {
+export class WalletServiceApi extends BaseAPI {
     /**
      * 
      * @param {WalletCreateWalletRequest} body 
@@ -2447,6 +2934,370 @@ export class WalletServiceApi extends BaseAPI implements WalletServiceApiInterfa
      */
     public walletServiceTransfer(body: WalletTransferRequest, options?: RawAxiosRequestConfig) {
         return WalletServiceApiFp(this.configuration).walletServiceTransfer(body, options).then((request) => request(this.axios, this.basePath));
+    }
+}
+
+
+
+/**
+ * ZoneServiceApi - axios parameter creator
+ */
+export const ZoneServiceApiAxiosParamCreator = function (configuration?: Configuration) {
+    return {
+        /**
+         * 
+         * @param {ZoneBulkUpdateMetadataRequest} body 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        zoneServiceBulkUpdateMetadata: async (body: ZoneBulkUpdateMetadataRequest, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+            // verify required parameter 'body' is not null or undefined
+            assertParamExists('zoneServiceBulkUpdateMetadata', 'body', body)
+            const localVarPath = `/v1/zones/bulk-metadata`;
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'POST', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+            localVarHeaderParameter['Content-Type'] = 'application/json';
+            localVarHeaderParameter['Accept'] = 'application/json';
+
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+            localVarRequestOptions.data = serializeDataIfNeeded(body, localVarRequestOptions, configuration)
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * 
+         * @param {ZoneCreateZoneRequest} body 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        zoneServiceCreateZone: async (body: ZoneCreateZoneRequest, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+            // verify required parameter 'body' is not null or undefined
+            assertParamExists('zoneServiceCreateZone', 'body', body)
+            const localVarPath = `/v1/zones`;
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'POST', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+            localVarHeaderParameter['Content-Type'] = 'application/json';
+            localVarHeaderParameter['Accept'] = 'application/json';
+
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+            localVarRequestOptions.data = serializeDataIfNeeded(body, localVarRequestOptions, configuration)
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * 
+         * @param {string} id 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        zoneServiceGetZone: async (id: string, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+            // verify required parameter 'id' is not null or undefined
+            assertParamExists('zoneServiceGetZone', 'id', id)
+            const localVarPath = `/v1/zones/{id}`
+                .replace(`{${"id"}}`, encodeURIComponent(String(id)));
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'GET', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+            localVarHeaderParameter['Accept'] = 'application/json';
+
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * 
+         * @param {string} [orgId] 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        zoneServiceListZones: async (orgId?: string, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+            const localVarPath = `/v1/zones`;
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'GET', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+            if (orgId !== undefined) {
+                localVarQueryParameter['orgId'] = orgId;
+            }
+
+            localVarHeaderParameter['Accept'] = 'application/json';
+
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * 
+         * @param {string} id 
+         * @param {ZoneServiceUpdateZoneBody} body 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        zoneServiceUpdateZone: async (id: string, body: ZoneServiceUpdateZoneBody, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+            // verify required parameter 'id' is not null or undefined
+            assertParamExists('zoneServiceUpdateZone', 'id', id)
+            // verify required parameter 'body' is not null or undefined
+            assertParamExists('zoneServiceUpdateZone', 'body', body)
+            const localVarPath = `/v1/zones/{id}`
+                .replace(`{${"id"}}`, encodeURIComponent(String(id)));
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'PUT', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+            localVarHeaderParameter['Content-Type'] = 'application/json';
+            localVarHeaderParameter['Accept'] = 'application/json';
+
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+            localVarRequestOptions.data = serializeDataIfNeeded(body, localVarRequestOptions, configuration)
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+    }
+};
+
+/**
+ * ZoneServiceApi - functional programming interface
+ */
+export const ZoneServiceApiFp = function(configuration?: Configuration) {
+    const localVarAxiosParamCreator = ZoneServiceApiAxiosParamCreator(configuration)
+    return {
+        /**
+         * 
+         * @param {ZoneBulkUpdateMetadataRequest} body 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async zoneServiceBulkUpdateMetadata(body: ZoneBulkUpdateMetadataRequest, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<ZoneBulkUpdateMetadataResponse>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.zoneServiceBulkUpdateMetadata(body, options);
+            const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
+            const localVarOperationServerBasePath = operationServerMap['ZoneServiceApi.zoneServiceBulkUpdateMetadata']?.[localVarOperationServerIndex]?.url;
+            return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
+        },
+        /**
+         * 
+         * @param {ZoneCreateZoneRequest} body 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async zoneServiceCreateZone(body: ZoneCreateZoneRequest, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<ZoneZone>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.zoneServiceCreateZone(body, options);
+            const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
+            const localVarOperationServerBasePath = operationServerMap['ZoneServiceApi.zoneServiceCreateZone']?.[localVarOperationServerIndex]?.url;
+            return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
+        },
+        /**
+         * 
+         * @param {string} id 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async zoneServiceGetZone(id: string, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<ZoneZone>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.zoneServiceGetZone(id, options);
+            const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
+            const localVarOperationServerBasePath = operationServerMap['ZoneServiceApi.zoneServiceGetZone']?.[localVarOperationServerIndex]?.url;
+            return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
+        },
+        /**
+         * 
+         * @param {string} [orgId] 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async zoneServiceListZones(orgId?: string, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<ZoneListZonesResponse>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.zoneServiceListZones(orgId, options);
+            const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
+            const localVarOperationServerBasePath = operationServerMap['ZoneServiceApi.zoneServiceListZones']?.[localVarOperationServerIndex]?.url;
+            return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
+        },
+        /**
+         * 
+         * @param {string} id 
+         * @param {ZoneServiceUpdateZoneBody} body 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async zoneServiceUpdateZone(id: string, body: ZoneServiceUpdateZoneBody, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<ZoneZone>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.zoneServiceUpdateZone(id, body, options);
+            const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
+            const localVarOperationServerBasePath = operationServerMap['ZoneServiceApi.zoneServiceUpdateZone']?.[localVarOperationServerIndex]?.url;
+            return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
+        },
+    }
+};
+
+/**
+ * ZoneServiceApi - factory interface
+ */
+export const ZoneServiceApiFactory = function (configuration?: Configuration, basePath?: string, axios?: AxiosInstance) {
+    const localVarFp = ZoneServiceApiFp(configuration)
+    return {
+        /**
+         * 
+         * @param {ZoneBulkUpdateMetadataRequest} body 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        zoneServiceBulkUpdateMetadata(body: ZoneBulkUpdateMetadataRequest, options?: RawAxiosRequestConfig): AxiosPromise<ZoneBulkUpdateMetadataResponse> {
+            return localVarFp.zoneServiceBulkUpdateMetadata(body, options).then((request) => request(axios, basePath));
+        },
+        /**
+         * 
+         * @param {ZoneCreateZoneRequest} body 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        zoneServiceCreateZone(body: ZoneCreateZoneRequest, options?: RawAxiosRequestConfig): AxiosPromise<ZoneZone> {
+            return localVarFp.zoneServiceCreateZone(body, options).then((request) => request(axios, basePath));
+        },
+        /**
+         * 
+         * @param {string} id 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        zoneServiceGetZone(id: string, options?: RawAxiosRequestConfig): AxiosPromise<ZoneZone> {
+            return localVarFp.zoneServiceGetZone(id, options).then((request) => request(axios, basePath));
+        },
+        /**
+         * 
+         * @param {string} [orgId] 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        zoneServiceListZones(orgId?: string, options?: RawAxiosRequestConfig): AxiosPromise<ZoneListZonesResponse> {
+            return localVarFp.zoneServiceListZones(orgId, options).then((request) => request(axios, basePath));
+        },
+        /**
+         * 
+         * @param {string} id 
+         * @param {ZoneServiceUpdateZoneBody} body 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        zoneServiceUpdateZone(id: string, body: ZoneServiceUpdateZoneBody, options?: RawAxiosRequestConfig): AxiosPromise<ZoneZone> {
+            return localVarFp.zoneServiceUpdateZone(id, body, options).then((request) => request(axios, basePath));
+        },
+    };
+};
+
+/**
+ * ZoneServiceApi - object-oriented interface
+ */
+export class ZoneServiceApi extends BaseAPI {
+    /**
+     * 
+     * @param {ZoneBulkUpdateMetadataRequest} body 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    public zoneServiceBulkUpdateMetadata(body: ZoneBulkUpdateMetadataRequest, options?: RawAxiosRequestConfig) {
+        return ZoneServiceApiFp(this.configuration).zoneServiceBulkUpdateMetadata(body, options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * 
+     * @param {ZoneCreateZoneRequest} body 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    public zoneServiceCreateZone(body: ZoneCreateZoneRequest, options?: RawAxiosRequestConfig) {
+        return ZoneServiceApiFp(this.configuration).zoneServiceCreateZone(body, options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * 
+     * @param {string} id 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    public zoneServiceGetZone(id: string, options?: RawAxiosRequestConfig) {
+        return ZoneServiceApiFp(this.configuration).zoneServiceGetZone(id, options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * 
+     * @param {string} [orgId] 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    public zoneServiceListZones(orgId?: string, options?: RawAxiosRequestConfig) {
+        return ZoneServiceApiFp(this.configuration).zoneServiceListZones(orgId, options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * 
+     * @param {string} id 
+     * @param {ZoneServiceUpdateZoneBody} body 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    public zoneServiceUpdateZone(id: string, body: ZoneServiceUpdateZoneBody, options?: RawAxiosRequestConfig) {
+        return ZoneServiceApiFp(this.configuration).zoneServiceUpdateZone(id, body, options).then((request) => request(this.axios, this.basePath));
     }
 }
 

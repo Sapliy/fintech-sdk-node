@@ -11,7 +11,7 @@ Name | Type | Description | Notes
 ## Example
 
 ```typescript
-import { WalletTransactionResponse } from '@sapliyio/fintech';
+import { WalletTransactionResponse } from '@sapliyio/fintech-node-generated';
 
 const instance: WalletTransactionResponse = {
     transactionId,

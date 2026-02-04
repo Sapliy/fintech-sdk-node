@@ -10,7 +10,7 @@ Name | Type | Description | Notes
 ## Example
 
 ```typescript
-import { NotificationsGetNotificationHistoryResponse } from '@sapliyio/fintech';
+import { NotificationsGetNotificationHistoryResponse } from '@sapliyio/fintech-node-generated';
 
 const instance: NotificationsGetNotificationHistoryResponse = {
     notifications,

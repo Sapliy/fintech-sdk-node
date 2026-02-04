@@ -10,7 +10,7 @@ Name | Type | Description | Notes
 ## Example
 
 ```typescript
-import { AuthListTeamMembersResponse } from '@sapliyio/fintech';
+import { AuthListTeamMembersResponse } from '@sapliyio/fintech-node-generated';
 
 const instance: AuthListTeamMembersResponse = {
     memberships,

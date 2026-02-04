@@ -14,7 +14,7 @@ Name | Type | Description | Notes
 ## Example
 
 ```typescript
-import { AuthValidateTokenResponse } from '@sapliyio/fintech';
+import { AuthValidateTokenResponse } from '@sapliyio/fintech-node-generated';
 
 const instance: AuthValidateTokenResponse = {
     valid,

@@ -15,7 +15,7 @@ Name | Type | Description | Notes
 ## Example
 
 ```typescript
-import { NotificationsWebhookEndpoint } from '@sapliyio/fintech';
+import { NotificationsWebhookEndpoint } from '@sapliyio/fintech-node-generated';
 
 const instance: NotificationsWebhookEndpoint = {
     id,

@@ -10,7 +10,7 @@ Name | Type | Description | Notes
 ## Example
 
 ```typescript
-import { ProtobufAny } from '@sapliyio/fintech';
+import { ProtobufAny } from '@sapliyio/fintech-node-generated';
 
 const instance: ProtobufAny = {
     type,

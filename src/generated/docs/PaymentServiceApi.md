@@ -19,7 +19,7 @@ import {
     PaymentServiceApi,
     Configuration,
     PaymentServiceConfirmPaymentIntentBody
-} from '@sapliyio/fintech';
+} from '@sapliyio/fintech-node-generated';
 
 const configuration = new Configuration();
 const apiInstance = new PaymentServiceApi(configuration);
@@ -74,7 +74,7 @@ import {
     PaymentServiceApi,
     Configuration,
     PaymentsCreatePaymentIntentRequest
-} from '@sapliyio/fintech';
+} from '@sapliyio/fintech-node-generated';
 
 const configuration = new Configuration();
 const apiInstance = new PaymentServiceApi(configuration);
@@ -125,7 +125,7 @@ No authorization required
 import {
     PaymentServiceApi,
     Configuration
-} from '@sapliyio/fintech';
+} from '@sapliyio/fintech-node-generated';
 
 const configuration = new Configuration();
 const apiInstance = new PaymentServiceApi(configuration);

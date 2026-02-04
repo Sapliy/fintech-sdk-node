@@ -20,7 +20,7 @@ import {
     NotificationServiceApi,
     Configuration,
     NotificationsCreateWebhookEndpointRequest
-} from '@sapliyio/fintech';
+} from '@sapliyio/fintech-node-generated';
 
 const configuration = new Configuration();
 const apiInstance = new NotificationServiceApi(configuration);
@@ -71,7 +71,7 @@ No authorization required
 import {
     NotificationServiceApi,
     Configuration
-} from '@sapliyio/fintech';
+} from '@sapliyio/fintech-node-generated';
 
 const configuration = new Configuration();
 const apiInstance = new NotificationServiceApi(configuration);
@@ -122,7 +122,7 @@ No authorization required
 import {
     NotificationServiceApi,
     Configuration
-} from '@sapliyio/fintech';
+} from '@sapliyio/fintech-node-generated';
 
 const configuration = new Configuration();
 const apiInstance = new NotificationServiceApi(configuration);
@@ -179,7 +179,7 @@ No authorization required
 import {
     NotificationServiceApi,
     Configuration
-} from '@sapliyio/fintech';
+} from '@sapliyio/fintech-node-generated';
 
 const configuration = new Configuration();
 const apiInstance = new NotificationServiceApi(configuration);

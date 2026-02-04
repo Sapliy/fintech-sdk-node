@@ -19,7 +19,7 @@ All URIs are relative to *http://localhost*
 import {
     BillingServiceApi,
     Configuration
-} from '@sapliyio/fintech';
+} from '@sapliyio/fintech-node-generated';
 
 const configuration = new Configuration();
 const apiInstance = new BillingServiceApi(configuration);
@@ -74,7 +74,7 @@ import {
     BillingServiceApi,
     Configuration,
     BillingCreateSubscriptionRequest
-} from '@sapliyio/fintech';
+} from '@sapliyio/fintech-node-generated';
 
 const configuration = new Configuration();
 const apiInstance = new BillingServiceApi(configuration);
@@ -125,7 +125,7 @@ No authorization required
 import {
     BillingServiceApi,
     Configuration
-} from '@sapliyio/fintech';
+} from '@sapliyio/fintech-node-generated';
 
 const configuration = new Configuration();
 const apiInstance = new BillingServiceApi(configuration);
@@ -176,7 +176,7 @@ No authorization required
 import {
     BillingServiceApi,
     Configuration
-} from '@sapliyio/fintech';
+} from '@sapliyio/fintech-node-generated';
 
 const configuration = new Configuration();
 const apiInstance = new BillingServiceApi(configuration);

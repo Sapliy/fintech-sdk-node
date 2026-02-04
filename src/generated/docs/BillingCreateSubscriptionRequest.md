@@ -12,7 +12,7 @@ Name | Type | Description | Notes
 ## Example
 
 ```typescript
-import { BillingCreateSubscriptionRequest } from '@sapliyio/fintech';
+import { BillingCreateSubscriptionRequest } from '@sapliyio/fintech-node-generated';
 
 const instance: BillingCreateSubscriptionRequest = {
     userId,

@@ -11,7 +11,7 @@ Name | Type | Description | Notes
 ## Example
 
 ```typescript
-import { LedgerRecordTransactionResponse } from '@sapliyio/fintech';
+import { LedgerRecordTransactionResponse } from '@sapliyio/fintech-node-generated';
 
 const instance: LedgerRecordTransactionResponse = {
     transactionId,

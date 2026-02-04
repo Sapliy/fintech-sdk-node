@@ -20,7 +20,7 @@ import {
     WalletServiceApi,
     Configuration,
     WalletCreateWalletRequest
-} from '@sapliyio/fintech';
+} from '@sapliyio/fintech-node-generated';
 
 const configuration = new Configuration();
 const apiInstance = new WalletServiceApi(configuration);
@@ -71,7 +71,7 @@ No authorization required
 import {
     WalletServiceApi,
     Configuration
-} from '@sapliyio/fintech';
+} from '@sapliyio/fintech-node-generated';
 
 const configuration = new Configuration();
 const apiInstance = new WalletServiceApi(configuration);
@@ -123,7 +123,7 @@ import {
     WalletServiceApi,
     Configuration,
     WalletTopUpRequest
-} from '@sapliyio/fintech';
+} from '@sapliyio/fintech-node-generated';
 
 const configuration = new Configuration();
 const apiInstance = new WalletServiceApi(configuration);
@@ -175,7 +175,7 @@ import {
     WalletServiceApi,
     Configuration,
     WalletTransferRequest
-} from '@sapliyio/fintech';
+} from '@sapliyio/fintech-node-generated';
 
 const configuration = new Configuration();
 const apiInstance = new WalletServiceApi(configuration);

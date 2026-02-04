@@ -10,11 +10,13 @@ Name | Type | Description | Notes
 **currency** | **string** |  | [optional] [default to undefined]
 **description** | **string** |  | [optional] [default to undefined]
 **referenceId** | **string** |  | [optional] [default to undefined]
+**zoneId** | **string** |  | [optional] [default to undefined]
+**mode** | **string** |  | [optional] [default to undefined]
 
 ## Example
 
 ```typescript
-import { LedgerRecordTransactionRequest } from '@sapliyio/fintech';
+import { LedgerRecordTransactionRequest } from '@sapliyio/fintech-node-generated';
 
 const instance: LedgerRecordTransactionRequest = {
     accountId,
@@ -22,6 +24,8 @@ const instance: LedgerRecordTransactionRequest = {
     currency,
     description,
     referenceId,
+    zoneId,
+    mode,
 };
 ```
 

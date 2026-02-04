@@ -12,7 +12,7 @@ Name | Type | Description | Notes
 ## Example
 
 ```typescript
-import { NotificationsCreateWebhookEndpointRequest } from '@sapliyio/fintech';
+import { NotificationsCreateWebhookEndpointRequest } from '@sapliyio/fintech-node-generated';
 
 const instance: NotificationsCreateWebhookEndpointRequest = {
     url,

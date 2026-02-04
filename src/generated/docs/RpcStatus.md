@@ -12,7 +12,7 @@ Name | Type | Description | Notes
 ## Example
 
 ```typescript
-import { RpcStatus } from '@sapliyio/fintech';
+import { RpcStatus } from '@sapliyio/fintech-node-generated';
 
 const instance: RpcStatus = {
     code,

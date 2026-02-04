@@ -14,7 +14,7 @@ Name | Type | Description | Notes
 ## Example
 
 ```typescript
-import { PaymentsCreatePaymentIntentRequest } from '@sapliyio/fintech';
+import { PaymentsCreatePaymentIntentRequest } from '@sapliyio/fintech-node-generated';
 
 const instance: PaymentsCreatePaymentIntentRequest = {
     amount,
