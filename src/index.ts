@@ -40,14 +40,14 @@ export class SapliyClient {
       }
     });
 
-    this.auth = new AuthServiceApi(config);
-    this.billing = new BillingServiceApi(config);
-    this.ledger = new LedgerServiceApi(config);
-    this.notifications = new NotificationServiceApi(config);
-    this.payments = new PaymentServiceApi(config);
-    this.wallets = new WalletServiceApi(config);
-    this.flows = new FlowServiceApi(config);
-    this.zones = new ZoneServiceApi(config);
+    this.auth = new AuthServiceApi(config, basePath, axiosInstance);
+    this.billing = new BillingServiceApi(config, basePath, axiosInstance);
+    this.ledger = new LedgerServiceApi(config, basePath, axiosInstance);
+    this.notifications = new NotificationServiceApi(config, basePath, axiosInstance);
+    this.payments = new PaymentServiceApi(config, basePath, axiosInstance);
+    this.wallets = new WalletServiceApi(config, basePath, axiosInstance);
+    this.flows = new FlowServiceApi(config, basePath, axiosInstance);
+    this.zones = new ZoneServiceApi(config, basePath, axiosInstance);
     this.events = new Events(axiosInstance);
   }
 }
