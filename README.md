@@ -145,6 +145,71 @@ await client.events.emit('checkout.completed', {
 });
 ```
 
+## Flow Builder Template Variables
+
+When creating flows in the Sapliy Flow Builder, you can use **Handlebars template syntax** to dynamically reference event data in your automation logic. This is particularly useful for approval messages, webhook payloads, and conditional logic.
+
+### Available Variables
+
+| Variable | Description | Example |
+|----------|-------------|---------|
+| `{{event.type}}` | The event type that triggered the flow | `payment.completed` |
+| `{{event.id}}` | Unique event identifier | `evt_abc123` |
+| `{{event.payload.*}}` | Access any field from the event payload | `{{event.payload.amount}}` |
+| `{{event.createdAt}}` | Timestamp when event was created | `2024-01-15T10:30:00Z` |
+
+### Usage Examples
+
+#### Approval Node Message
+
+```handlebars
+Approval required for payment of ${{event.payload.amount}} {{event.payload.currency}}
+Customer: {{event.payload.customerId}}
+```
+
+When you emit an event like:
+
+```typescript
+await client.events.emit('payment.high_value', {
+  amount: 10000,
+  currency: 'USD',
+  customerId: 'cust_456'
+});
+```
+
+The approval message will render as:
+
+```
+Approval required for payment of $10000 USD
+Customer: cust_456
+```
+
+#### Webhook Payload Template
+
+```json
+{
+  "orderId": "{{event.payload.orderId}}",
+  "status": "approved",
+  "approvedAt": "{{event.createdAt}}",
+  "amount": {{event.payload.amount}}
+}
+```
+
+#### Conditional Logic
+
+Use template variables in condition nodes to create dynamic flow logic:
+
+```handlebars
+{{event.payload.amount}} > 5000
+```
+
+### Best Practices
+
+1. **Always validate data exists**: Use the Flow Builder's test mode to ensure your template variables resolve correctly
+2. **Type safety**: Numeric fields don't need quotes in JSON templates: `{{amount}}` not `"{{amount}}"`
+3. **Nested objects**: Access nested data with dot notation: `{{event.payload.customer.email}}`
+4. **Debugging**: Use `sapliy listen` to see the actual event payloads and verify your template paths
+
 ## Webhook Handling
 
 ### Express
