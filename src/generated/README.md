@@ -53,6 +53,7 @@ Class | Method | HTTP request | Description
 ------------ | ------------- | ------------- | -------------
 *AuthApi* | [**v1AuthLoginPost**](docs/AuthApi.md#v1authloginpost) | **POST** /v1/auth/login | Login
 *AuthApi* | [**v1AuthRegisterPost**](docs/AuthApi.md#v1authregisterpost) | **POST** /v1/auth/register | Register a new user
+*AuthApi* | [**validateKey**](docs/AuthApi.md#validatekey) | **POST** /v1/auth/validate | Validate an API key
 *BillingApi* | [**cancelSubscription**](docs/BillingApi.md#cancelsubscription) | **DELETE** /v1/billing/subscriptions/{id} | Cancel Subscription
 *BillingApi* | [**getSubscription**](docs/BillingApi.md#getsubscription) | **GET** /v1/billing/subscriptions/{id} | Get Subscription details
 *BillingApi* | [**v1BillingSubscriptionsPost**](docs/BillingApi.md#v1billingsubscriptionspost) | **POST** /v1/billing/subscriptions | Create Subscription
@@ -66,12 +67,15 @@ Class | Method | HTTP request | Description
 *WalletsApi* | [**getWallet**](docs/WalletsApi.md#getwallet) | **GET** /v1/wallets/{user_id} | Get Wallet Balance
 *WalletsApi* | [**v1WalletsTopupPost**](docs/WalletsApi.md#v1walletstopuppost) | **POST** /v1/wallets/topup | Top up a wallet
 *WalletsApi* | [**v1WalletsTransferPost**](docs/WalletsApi.md#v1walletstransferpost) | **POST** /v1/wallets/transfer | Transfer between wallets
+*ZonesApi* | [**createZone**](docs/ZonesApi.md#createzone) | **POST** /v1/zones | Create a Zone
+*ZonesApi* | [**listZones**](docs/ZonesApi.md#listzones) | **GET** /v1/zones | List or Get Zones
 
 
 ### Documentation For Models
 
  - [ConfirmPaymentIntentRequest](docs/ConfirmPaymentIntentRequest.md)
  - [CreatePaymentIntentRequest](docs/CreatePaymentIntentRequest.md)
+ - [CreateZoneRequest](docs/CreateZoneRequest.md)
  - [EmitEvent202Response](docs/EmitEvent202Response.md)
  - [EmitEventRequest](docs/EmitEventRequest.md)
  - [ErrorEnvelope](docs/ErrorEnvelope.md)
@@ -79,6 +83,7 @@ Class | Method | HTTP request | Description
  - [LedgerAccount](docs/LedgerAccount.md)
  - [LedgerEntry](docs/LedgerEntry.md)
  - [LedgerTransaction](docs/LedgerTransaction.md)
+ - [ListZones200ResponseInner](docs/ListZones200ResponseInner.md)
  - [PaymentIntent](docs/PaymentIntent.md)
  - [Subscription](docs/Subscription.md)
  - [User](docs/User.md)
@@ -91,6 +96,8 @@ Class | Method | HTTP request | Description
  - [V1WalletsTopupPost200Response](docs/V1WalletsTopupPost200Response.md)
  - [V1WalletsTopupPostRequest](docs/V1WalletsTopupPostRequest.md)
  - [V1WalletsTransferPostRequest](docs/V1WalletsTransferPostRequest.md)
+ - [ValidateKey200Response](docs/ValidateKey200Response.md)
+ - [ValidateKeyRequest](docs/ValidateKeyRequest.md)
  - [Wallet](docs/Wallet.md)
 
 

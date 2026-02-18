@@ -9,6 +9,7 @@ docs/AuthApi.md
 docs/BillingApi.md
 docs/ConfirmPaymentIntentRequest.md
 docs/CreatePaymentIntentRequest.md
+docs/CreateZoneRequest.md
 docs/EmitEvent202Response.md
 docs/EmitEventRequest.md
 docs/ErrorEnvelope.md
@@ -18,6 +19,7 @@ docs/LedgerAccount.md
 docs/LedgerApi.md
 docs/LedgerEntry.md
 docs/LedgerTransaction.md
+docs/ListZones200ResponseInner.md
 docs/PaymentIntent.md
 docs/PaymentsApi.md
 docs/Subscription.md
@@ -31,8 +33,11 @@ docs/V1LedgerTransactionsPostRequest.md
 docs/V1WalletsTopupPost200Response.md
 docs/V1WalletsTopupPostRequest.md
 docs/V1WalletsTransferPostRequest.md
+docs/ValidateKey200Response.md
+docs/ValidateKeyRequest.md
 docs/Wallet.md
 docs/WalletsApi.md
+docs/ZonesApi.md
 git_push.sh
 index.ts
 package.json

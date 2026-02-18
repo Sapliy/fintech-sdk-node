@@ -32,6 +32,20 @@ export interface CreatePaymentIntentRequest {
     'description'?: string;
     'metadata'?: { [key: string]: string; };
 }
+export interface CreateZoneRequest {
+    'org_id': string;
+    'name': string;
+    'mode': CreateZoneRequestModeEnum;
+    'template_name'?: string;
+}
+
+export const CreateZoneRequestModeEnum = {
+    Live: 'live',
+    Test: 'test'
+} as const;
+
+export type CreateZoneRequestModeEnum = typeof CreateZoneRequestModeEnum[keyof typeof CreateZoneRequestModeEnum];
+
 export interface EmitEvent202Response {
     'event_id'?: string;
     'status'?: string;
@@ -67,6 +81,12 @@ export interface LedgerTransaction {
     'description'?: string;
     'status': string;
     'entries'?: Array<LedgerEntry>;
+}
+export interface ListZones200ResponseInner {
+    'id'?: string;
+    'org_id'?: string;
+    'name'?: string;
+    'mode'?: string;
 }
 export interface PaymentIntent {
     'id': string;
@@ -156,6 +176,16 @@ export interface V1WalletsTransferPostRequest {
     'currency': string;
     'reference_id': string;
 }
+export interface ValidateKey200Response {
+    'valid'?: boolean;
+    'user_id'?: string;
+    'org_id'?: string;
+    'environment'?: string;
+    'scopes'?: Array<string>;
+}
+export interface ValidateKeyRequest {
+    'key': string;
+}
 export interface Wallet {
     'id': string;
     'user_id': string;
@@ -238,6 +268,41 @@ export const AuthApiAxiosParamCreator = function (configuration?: Configuration)
                 options: localVarRequestOptions,
             };
         },
+        /**
+         * 
+         * @summary Validate an API key
+         * @param {ValidateKeyRequest} validateKeyRequest 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        validateKey: async (validateKeyRequest: ValidateKeyRequest, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+            // verify required parameter 'validateKeyRequest' is not null or undefined
+            assertParamExists('validateKey', 'validateKeyRequest', validateKeyRequest)
+            const localVarPath = `/v1/auth/validate`;
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'POST', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+            localVarHeaderParameter['Content-Type'] = 'application/json';
+            localVarHeaderParameter['Accept'] = 'application/json';
+
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+            localVarRequestOptions.data = serializeDataIfNeeded(validateKeyRequest, localVarRequestOptions, configuration)
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
     }
 };
 
@@ -273,6 +338,19 @@ export const AuthApiFp = function(configuration?: Configuration) {
             const localVarOperationServerBasePath = operationServerMap['AuthApi.v1AuthRegisterPost']?.[localVarOperationServerIndex]?.url;
             return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
         },
+        /**
+         * 
+         * @summary Validate an API key
+         * @param {ValidateKeyRequest} validateKeyRequest 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async validateKey(validateKeyRequest: ValidateKeyRequest, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<ValidateKey200Response>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.validateKey(validateKeyRequest, options);
+            const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
+            const localVarOperationServerBasePath = operationServerMap['AuthApi.validateKey']?.[localVarOperationServerIndex]?.url;
+            return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
+        },
     }
 };
 
@@ -302,6 +380,16 @@ export const AuthApiFactory = function (configuration?: Configuration, basePath?
         v1AuthRegisterPost(v1AuthRegisterPostRequest: V1AuthRegisterPostRequest, options?: RawAxiosRequestConfig): AxiosPromise<V1AuthRegisterPost201Response> {
             return localVarFp.v1AuthRegisterPost(v1AuthRegisterPostRequest, options).then((request) => request(axios, basePath));
         },
+        /**
+         * 
+         * @summary Validate an API key
+         * @param {ValidateKeyRequest} validateKeyRequest 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        validateKey(validateKeyRequest: ValidateKeyRequest, options?: RawAxiosRequestConfig): AxiosPromise<ValidateKey200Response> {
+            return localVarFp.validateKey(validateKeyRequest, options).then((request) => request(axios, basePath));
+        },
     };
 };
 
@@ -329,6 +417,17 @@ export class AuthApi extends BaseAPI {
      */
     public v1AuthRegisterPost(v1AuthRegisterPostRequest: V1AuthRegisterPostRequest, options?: RawAxiosRequestConfig) {
         return AuthApiFp(this.configuration).v1AuthRegisterPost(v1AuthRegisterPostRequest, options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * 
+     * @summary Validate an API key
+     * @param {ValidateKeyRequest} validateKeyRequest 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    public validateKey(validateKeyRequest: ValidateKeyRequest, options?: RawAxiosRequestConfig) {
+        return AuthApiFp(this.configuration).validateKey(validateKeyRequest, options).then((request) => request(this.axios, this.basePath));
     }
 }
 
@@ -1544,5 +1643,192 @@ export const GetWalletXZoneModeEnum = {
     Test: 'test'
 } as const;
 export type GetWalletXZoneModeEnum = typeof GetWalletXZoneModeEnum[keyof typeof GetWalletXZoneModeEnum];
+
+
+/**
+ * ZonesApi - axios parameter creator
+ */
+export const ZonesApiAxiosParamCreator = function (configuration?: Configuration) {
+    return {
+        /**
+         * 
+         * @summary Create a Zone
+         * @param {CreateZoneRequest} createZoneRequest 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        createZone: async (createZoneRequest: CreateZoneRequest, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+            // verify required parameter 'createZoneRequest' is not null or undefined
+            assertParamExists('createZone', 'createZoneRequest', createZoneRequest)
+            const localVarPath = `/v1/zones`;
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'POST', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+            // authentication ApiKeyAuth required
+            // http bearer authentication required
+            await setBearerAuthToObject(localVarHeaderParameter, configuration)
+
+            localVarHeaderParameter['Content-Type'] = 'application/json';
+            localVarHeaderParameter['Accept'] = 'application/json';
+
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+            localVarRequestOptions.data = serializeDataIfNeeded(createZoneRequest, localVarRequestOptions, configuration)
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * 
+         * @summary List or Get Zones
+         * @param {string} [orgId] 
+         * @param {string} [id] 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        listZones: async (orgId?: string, id?: string, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+            const localVarPath = `/v1/zones`;
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'GET', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+            // authentication ApiKeyAuth required
+            // http bearer authentication required
+            await setBearerAuthToObject(localVarHeaderParameter, configuration)
+
+            if (orgId !== undefined) {
+                localVarQueryParameter['org_id'] = orgId;
+            }
+
+            if (id !== undefined) {
+                localVarQueryParameter['id'] = id;
+            }
+
+            localVarHeaderParameter['Accept'] = 'application/json';
+
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+    }
+};
+
+/**
+ * ZonesApi - functional programming interface
+ */
+export const ZonesApiFp = function(configuration?: Configuration) {
+    const localVarAxiosParamCreator = ZonesApiAxiosParamCreator(configuration)
+    return {
+        /**
+         * 
+         * @summary Create a Zone
+         * @param {CreateZoneRequest} createZoneRequest 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async createZone(createZoneRequest: CreateZoneRequest, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<ListZones200ResponseInner>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.createZone(createZoneRequest, options);
+            const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
+            const localVarOperationServerBasePath = operationServerMap['ZonesApi.createZone']?.[localVarOperationServerIndex]?.url;
+            return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
+        },
+        /**
+         * 
+         * @summary List or Get Zones
+         * @param {string} [orgId] 
+         * @param {string} [id] 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async listZones(orgId?: string, id?: string, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Array<ListZones200ResponseInner>>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.listZones(orgId, id, options);
+            const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
+            const localVarOperationServerBasePath = operationServerMap['ZonesApi.listZones']?.[localVarOperationServerIndex]?.url;
+            return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
+        },
+    }
+};
+
+/**
+ * ZonesApi - factory interface
+ */
+export const ZonesApiFactory = function (configuration?: Configuration, basePath?: string, axios?: AxiosInstance) {
+    const localVarFp = ZonesApiFp(configuration)
+    return {
+        /**
+         * 
+         * @summary Create a Zone
+         * @param {CreateZoneRequest} createZoneRequest 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        createZone(createZoneRequest: CreateZoneRequest, options?: RawAxiosRequestConfig): AxiosPromise<ListZones200ResponseInner> {
+            return localVarFp.createZone(createZoneRequest, options).then((request) => request(axios, basePath));
+        },
+        /**
+         * 
+         * @summary List or Get Zones
+         * @param {string} [orgId] 
+         * @param {string} [id] 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        listZones(orgId?: string, id?: string, options?: RawAxiosRequestConfig): AxiosPromise<Array<ListZones200ResponseInner>> {
+            return localVarFp.listZones(orgId, id, options).then((request) => request(axios, basePath));
+        },
+    };
+};
+
+/**
+ * ZonesApi - object-oriented interface
+ */
+export class ZonesApi extends BaseAPI {
+    /**
+     * 
+     * @summary Create a Zone
+     * @param {CreateZoneRequest} createZoneRequest 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    public createZone(createZoneRequest: CreateZoneRequest, options?: RawAxiosRequestConfig) {
+        return ZonesApiFp(this.configuration).createZone(createZoneRequest, options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * 
+     * @summary List or Get Zones
+     * @param {string} [orgId] 
+     * @param {string} [id] 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    public listZones(orgId?: string, id?: string, options?: RawAxiosRequestConfig) {
+        return ZonesApiFp(this.configuration).listZones(orgId, id, options).then((request) => request(this.axios, this.basePath));
+    }
+}
+
 
 
