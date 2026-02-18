@@ -46,6 +46,12 @@ export const CreateZoneRequestModeEnum = {
 
 export type CreateZoneRequestModeEnum = typeof CreateZoneRequestModeEnum[keyof typeof CreateZoneRequestModeEnum];
 
+export interface Edge {
+    'id': string;
+    'source': string;
+    'target': string;
+    'source_handle'?: string;
+}
 export interface EmitEvent202Response {
     'event_id'?: string;
     'status'?: string;
@@ -63,6 +69,56 @@ export interface ErrorEnvelopeError {
     'message': string;
     'request_id'?: string;
     'trace_id'?: string;
+}
+export interface ExecutionStep {
+    'node_id': string;
+    'status': string;
+    'input'?: object;
+    'output'?: object;
+    'error'?: string;
+}
+export interface Flow {
+    'id': string;
+    'org_id'?: string;
+    'zone_id': string;
+    'name': string;
+    'description'?: string;
+    'enabled'?: boolean;
+    'version'?: number;
+    'trigger'?: Trigger;
+    'nodes'?: Array<Node>;
+    'edges'?: Array<Edge>;
+    'created_at'?: string;
+    'updated_at'?: string;
+}
+export interface FlowExecution {
+    'id': string;
+    'flow_id': string;
+    'flow_version'?: number;
+    'trigger_id'?: string;
+    'status': FlowExecutionStatusEnum;
+    'current_node_id'?: string;
+    'input'?: object;
+    'output'?: object;
+    'steps'?: Array<ExecutionStep>;
+    'started_at'?: string;
+    'ended_at'?: string;
+}
+
+export const FlowExecutionStatusEnum = {
+    Pending: 'pending',
+    Running: 'running',
+    Paused: 'paused',
+    Completed: 'completed',
+    Failed: 'failed'
+} as const;
+
+export type FlowExecutionStatusEnum = typeof FlowExecutionStatusEnum[keyof typeof FlowExecutionStatusEnum];
+
+export interface GetPastEvents200Response {
+    'events'?: Array<object>;
+    'limit'?: number;
+    'offset'?: number;
 }
 export interface LedgerAccount {
     'id': string;
@@ -82,11 +138,21 @@ export interface LedgerTransaction {
     'status': string;
     'entries'?: Array<LedgerEntry>;
 }
+export interface ListFlows200Response {
+    'flows'?: Array<Flow>;
+    'count'?: number;
+}
 export interface ListZones200ResponseInner {
     'id'?: string;
     'org_id'?: string;
     'name'?: string;
     'mode'?: string;
+}
+export interface Node {
+    'id': string;
+    'type': string;
+    'position'?: object;
+    'data'?: object;
 }
 export interface PaymentIntent {
     'id': string;
@@ -114,6 +180,17 @@ export const PaymentIntentStatusEnum = {
 
 export type PaymentIntentStatusEnum = typeof PaymentIntentStatusEnum[keyof typeof PaymentIntentStatusEnum];
 
+export interface ReplayEvent200Response {
+    'message'?: string;
+    'eventId'?: string;
+    'originalId'?: string;
+}
+export interface ReplayEventRequest {
+    'zoneId': string;
+}
+export interface ResumeExecution200Response {
+    'message'?: string;
+}
 export interface Subscription {
     'id': string;
     'status': SubscriptionStatusEnum;
@@ -130,6 +207,11 @@ export const SubscriptionStatusEnum = {
 
 export type SubscriptionStatusEnum = typeof SubscriptionStatusEnum[keyof typeof SubscriptionStatusEnum];
 
+export interface Trigger {
+    'type': string;
+    'event_type'?: string;
+    'config'?: object;
+}
 export interface User {
     'id': string;
     'email': string;
@@ -726,6 +808,97 @@ export const EventsApiAxiosParamCreator = function (configuration?: Configuratio
                 options: localVarRequestOptions,
             };
         },
+        /**
+         * 
+         * @summary Get Past Events (Webhook Replay)
+         * @param {string} zoneId 
+         * @param {number} [limit] 
+         * @param {number} [offset] 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        getPastEvents: async (zoneId: string, limit?: number, offset?: number, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+            // verify required parameter 'zoneId' is not null or undefined
+            assertParamExists('getPastEvents', 'zoneId', zoneId)
+            const localVarPath = `/v1/zones/{zoneId}/events/past`
+                .replace(`{${"zoneId"}}`, encodeURIComponent(String(zoneId)));
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'GET', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+            // authentication ApiKeyAuth required
+            // http bearer authentication required
+            await setBearerAuthToObject(localVarHeaderParameter, configuration)
+
+            if (limit !== undefined) {
+                localVarQueryParameter['limit'] = limit;
+            }
+
+            if (offset !== undefined) {
+                localVarQueryParameter['offset'] = offset;
+            }
+
+            localVarHeaderParameter['Accept'] = 'application/json';
+
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * 
+         * @summary Replay an Event
+         * @param {string} eventId 
+         * @param {ReplayEventRequest} replayEventRequest 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        replayEvent: async (eventId: string, replayEventRequest: ReplayEventRequest, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+            // verify required parameter 'eventId' is not null or undefined
+            assertParamExists('replayEvent', 'eventId', eventId)
+            // verify required parameter 'replayEventRequest' is not null or undefined
+            assertParamExists('replayEvent', 'replayEventRequest', replayEventRequest)
+            const localVarPath = `/v1/events/{eventId}/replay`
+                .replace(`{${"eventId"}}`, encodeURIComponent(String(eventId)));
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'POST', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+            // authentication ApiKeyAuth required
+            // http bearer authentication required
+            await setBearerAuthToObject(localVarHeaderParameter, configuration)
+
+            localVarHeaderParameter['Content-Type'] = 'application/json';
+            localVarHeaderParameter['Accept'] = 'application/json';
+
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+            localVarRequestOptions.data = serializeDataIfNeeded(replayEventRequest, localVarRequestOptions, configuration)
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
     }
 };
 
@@ -748,6 +921,35 @@ export const EventsApiFp = function(configuration?: Configuration) {
             const localVarOperationServerBasePath = operationServerMap['EventsApi.emitEvent']?.[localVarOperationServerIndex]?.url;
             return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
         },
+        /**
+         * 
+         * @summary Get Past Events (Webhook Replay)
+         * @param {string} zoneId 
+         * @param {number} [limit] 
+         * @param {number} [offset] 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async getPastEvents(zoneId: string, limit?: number, offset?: number, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<GetPastEvents200Response>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.getPastEvents(zoneId, limit, offset, options);
+            const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
+            const localVarOperationServerBasePath = operationServerMap['EventsApi.getPastEvents']?.[localVarOperationServerIndex]?.url;
+            return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
+        },
+        /**
+         * 
+         * @summary Replay an Event
+         * @param {string} eventId 
+         * @param {ReplayEventRequest} replayEventRequest 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async replayEvent(eventId: string, replayEventRequest: ReplayEventRequest, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<ReplayEvent200Response>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.replayEvent(eventId, replayEventRequest, options);
+            const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
+            const localVarOperationServerBasePath = operationServerMap['EventsApi.replayEvent']?.[localVarOperationServerIndex]?.url;
+            return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
+        },
     }
 };
 
@@ -767,6 +969,29 @@ export const EventsApiFactory = function (configuration?: Configuration, basePat
         emitEvent(emitEventRequest: EmitEventRequest, options?: RawAxiosRequestConfig): AxiosPromise<EmitEvent202Response> {
             return localVarFp.emitEvent(emitEventRequest, options).then((request) => request(axios, basePath));
         },
+        /**
+         * 
+         * @summary Get Past Events (Webhook Replay)
+         * @param {string} zoneId 
+         * @param {number} [limit] 
+         * @param {number} [offset] 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        getPastEvents(zoneId: string, limit?: number, offset?: number, options?: RawAxiosRequestConfig): AxiosPromise<GetPastEvents200Response> {
+            return localVarFp.getPastEvents(zoneId, limit, offset, options).then((request) => request(axios, basePath));
+        },
+        /**
+         * 
+         * @summary Replay an Event
+         * @param {string} eventId 
+         * @param {ReplayEventRequest} replayEventRequest 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        replayEvent(eventId: string, replayEventRequest: ReplayEventRequest, options?: RawAxiosRequestConfig): AxiosPromise<ReplayEvent200Response> {
+            return localVarFp.replayEvent(eventId, replayEventRequest, options).then((request) => request(axios, basePath));
+        },
     };
 };
 
@@ -783,6 +1008,615 @@ export class EventsApi extends BaseAPI {
      */
     public emitEvent(emitEventRequest: EmitEventRequest, options?: RawAxiosRequestConfig) {
         return EventsApiFp(this.configuration).emitEvent(emitEventRequest, options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * 
+     * @summary Get Past Events (Webhook Replay)
+     * @param {string} zoneId 
+     * @param {number} [limit] 
+     * @param {number} [offset] 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    public getPastEvents(zoneId: string, limit?: number, offset?: number, options?: RawAxiosRequestConfig) {
+        return EventsApiFp(this.configuration).getPastEvents(zoneId, limit, offset, options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * 
+     * @summary Replay an Event
+     * @param {string} eventId 
+     * @param {ReplayEventRequest} replayEventRequest 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    public replayEvent(eventId: string, replayEventRequest: ReplayEventRequest, options?: RawAxiosRequestConfig) {
+        return EventsApiFp(this.configuration).replayEvent(eventId, replayEventRequest, options).then((request) => request(this.axios, this.basePath));
+    }
+}
+
+
+
+/**
+ * ExecutionsApi - axios parameter creator
+ */
+export const ExecutionsApiAxiosParamCreator = function (configuration?: Configuration) {
+    return {
+        /**
+         * 
+         * @summary Get Execution details
+         * @param {string} executionId 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        getExecution: async (executionId: string, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+            // verify required parameter 'executionId' is not null or undefined
+            assertParamExists('getExecution', 'executionId', executionId)
+            const localVarPath = `/v1/executions/{executionId}`
+                .replace(`{${"executionId"}}`, encodeURIComponent(String(executionId)));
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'GET', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+            // authentication ApiKeyAuth required
+            // http bearer authentication required
+            await setBearerAuthToObject(localVarHeaderParameter, configuration)
+
+            localVarHeaderParameter['Accept'] = 'application/json';
+
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * 
+         * @summary Resume a paused Execution
+         * @param {string} executionId 
+         * @param {{ [key: string]: any; }} [requestBody] 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        resumeExecution: async (executionId: string, requestBody?: { [key: string]: any; }, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+            // verify required parameter 'executionId' is not null or undefined
+            assertParamExists('resumeExecution', 'executionId', executionId)
+            const localVarPath = `/v1/executions/{executionId}/resume`
+                .replace(`{${"executionId"}}`, encodeURIComponent(String(executionId)));
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'POST', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+            // authentication ApiKeyAuth required
+            // http bearer authentication required
+            await setBearerAuthToObject(localVarHeaderParameter, configuration)
+
+            localVarHeaderParameter['Content-Type'] = 'application/json';
+            localVarHeaderParameter['Accept'] = 'application/json';
+
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+            localVarRequestOptions.data = serializeDataIfNeeded(requestBody, localVarRequestOptions, configuration)
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+    }
+};
+
+/**
+ * ExecutionsApi - functional programming interface
+ */
+export const ExecutionsApiFp = function(configuration?: Configuration) {
+    const localVarAxiosParamCreator = ExecutionsApiAxiosParamCreator(configuration)
+    return {
+        /**
+         * 
+         * @summary Get Execution details
+         * @param {string} executionId 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async getExecution(executionId: string, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<FlowExecution>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.getExecution(executionId, options);
+            const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
+            const localVarOperationServerBasePath = operationServerMap['ExecutionsApi.getExecution']?.[localVarOperationServerIndex]?.url;
+            return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
+        },
+        /**
+         * 
+         * @summary Resume a paused Execution
+         * @param {string} executionId 
+         * @param {{ [key: string]: any; }} [requestBody] 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async resumeExecution(executionId: string, requestBody?: { [key: string]: any; }, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<ResumeExecution200Response>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.resumeExecution(executionId, requestBody, options);
+            const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
+            const localVarOperationServerBasePath = operationServerMap['ExecutionsApi.resumeExecution']?.[localVarOperationServerIndex]?.url;
+            return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
+        },
+    }
+};
+
+/**
+ * ExecutionsApi - factory interface
+ */
+export const ExecutionsApiFactory = function (configuration?: Configuration, basePath?: string, axios?: AxiosInstance) {
+    const localVarFp = ExecutionsApiFp(configuration)
+    return {
+        /**
+         * 
+         * @summary Get Execution details
+         * @param {string} executionId 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        getExecution(executionId: string, options?: RawAxiosRequestConfig): AxiosPromise<FlowExecution> {
+            return localVarFp.getExecution(executionId, options).then((request) => request(axios, basePath));
+        },
+        /**
+         * 
+         * @summary Resume a paused Execution
+         * @param {string} executionId 
+         * @param {{ [key: string]: any; }} [requestBody] 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        resumeExecution(executionId: string, requestBody?: { [key: string]: any; }, options?: RawAxiosRequestConfig): AxiosPromise<ResumeExecution200Response> {
+            return localVarFp.resumeExecution(executionId, requestBody, options).then((request) => request(axios, basePath));
+        },
+    };
+};
+
+/**
+ * ExecutionsApi - object-oriented interface
+ */
+export class ExecutionsApi extends BaseAPI {
+    /**
+     * 
+     * @summary Get Execution details
+     * @param {string} executionId 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    public getExecution(executionId: string, options?: RawAxiosRequestConfig) {
+        return ExecutionsApiFp(this.configuration).getExecution(executionId, options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * 
+     * @summary Resume a paused Execution
+     * @param {string} executionId 
+     * @param {{ [key: string]: any; }} [requestBody] 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    public resumeExecution(executionId: string, requestBody?: { [key: string]: any; }, options?: RawAxiosRequestConfig) {
+        return ExecutionsApiFp(this.configuration).resumeExecution(executionId, requestBody, options).then((request) => request(this.axios, this.basePath));
+    }
+}
+
+
+
+/**
+ * FlowsApi - axios parameter creator
+ */
+export const FlowsApiAxiosParamCreator = function (configuration?: Configuration) {
+    return {
+        /**
+         * 
+         * @summary Create a Flow
+         * @param {Flow} flow 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        createFlow: async (flow: Flow, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+            // verify required parameter 'flow' is not null or undefined
+            assertParamExists('createFlow', 'flow', flow)
+            const localVarPath = `/v1/flows`;
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'POST', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+            // authentication ApiKeyAuth required
+            // http bearer authentication required
+            await setBearerAuthToObject(localVarHeaderParameter, configuration)
+
+            localVarHeaderParameter['Content-Type'] = 'application/json';
+            localVarHeaderParameter['Accept'] = 'application/json';
+
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+            localVarRequestOptions.data = serializeDataIfNeeded(flow, localVarRequestOptions, configuration)
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * 
+         * @summary Delete a Flow
+         * @param {string} flowId 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        deleteFlow: async (flowId: string, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+            // verify required parameter 'flowId' is not null or undefined
+            assertParamExists('deleteFlow', 'flowId', flowId)
+            const localVarPath = `/v1/flows/{flowId}`
+                .replace(`{${"flowId"}}`, encodeURIComponent(String(flowId)));
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'DELETE', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+            // authentication ApiKeyAuth required
+            // http bearer authentication required
+            await setBearerAuthToObject(localVarHeaderParameter, configuration)
+
+
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * 
+         * @summary Get Flow details
+         * @param {string} flowId 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        getFlow: async (flowId: string, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+            // verify required parameter 'flowId' is not null or undefined
+            assertParamExists('getFlow', 'flowId', flowId)
+            const localVarPath = `/v1/flows/{flowId}`
+                .replace(`{${"flowId"}}`, encodeURIComponent(String(flowId)));
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'GET', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+            // authentication ApiKeyAuth required
+            // http bearer authentication required
+            await setBearerAuthToObject(localVarHeaderParameter, configuration)
+
+            localVarHeaderParameter['Accept'] = 'application/json';
+
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * 
+         * @summary List Flows in a Zone
+         * @param {string} zoneId 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        listFlows: async (zoneId: string, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+            // verify required parameter 'zoneId' is not null or undefined
+            assertParamExists('listFlows', 'zoneId', zoneId)
+            const localVarPath = `/v1/zones/{zoneId}/flows`
+                .replace(`{${"zoneId"}}`, encodeURIComponent(String(zoneId)));
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'GET', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+            // authentication ApiKeyAuth required
+            // http bearer authentication required
+            await setBearerAuthToObject(localVarHeaderParameter, configuration)
+
+            localVarHeaderParameter['Accept'] = 'application/json';
+
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * 
+         * @summary Update a Flow
+         * @param {string} flowId 
+         * @param {Flow} flow 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        updateFlow: async (flowId: string, flow: Flow, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+            // verify required parameter 'flowId' is not null or undefined
+            assertParamExists('updateFlow', 'flowId', flowId)
+            // verify required parameter 'flow' is not null or undefined
+            assertParamExists('updateFlow', 'flow', flow)
+            const localVarPath = `/v1/flows/{flowId}`
+                .replace(`{${"flowId"}}`, encodeURIComponent(String(flowId)));
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'PUT', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+            // authentication ApiKeyAuth required
+            // http bearer authentication required
+            await setBearerAuthToObject(localVarHeaderParameter, configuration)
+
+            localVarHeaderParameter['Content-Type'] = 'application/json';
+            localVarHeaderParameter['Accept'] = 'application/json';
+
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+            localVarRequestOptions.data = serializeDataIfNeeded(flow, localVarRequestOptions, configuration)
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+    }
+};
+
+/**
+ * FlowsApi - functional programming interface
+ */
+export const FlowsApiFp = function(configuration?: Configuration) {
+    const localVarAxiosParamCreator = FlowsApiAxiosParamCreator(configuration)
+    return {
+        /**
+         * 
+         * @summary Create a Flow
+         * @param {Flow} flow 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async createFlow(flow: Flow, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Flow>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.createFlow(flow, options);
+            const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
+            const localVarOperationServerBasePath = operationServerMap['FlowsApi.createFlow']?.[localVarOperationServerIndex]?.url;
+            return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
+        },
+        /**
+         * 
+         * @summary Delete a Flow
+         * @param {string} flowId 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async deleteFlow(flowId: string, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.deleteFlow(flowId, options);
+            const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
+            const localVarOperationServerBasePath = operationServerMap['FlowsApi.deleteFlow']?.[localVarOperationServerIndex]?.url;
+            return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
+        },
+        /**
+         * 
+         * @summary Get Flow details
+         * @param {string} flowId 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async getFlow(flowId: string, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Flow>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.getFlow(flowId, options);
+            const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
+            const localVarOperationServerBasePath = operationServerMap['FlowsApi.getFlow']?.[localVarOperationServerIndex]?.url;
+            return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
+        },
+        /**
+         * 
+         * @summary List Flows in a Zone
+         * @param {string} zoneId 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async listFlows(zoneId: string, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<ListFlows200Response>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.listFlows(zoneId, options);
+            const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
+            const localVarOperationServerBasePath = operationServerMap['FlowsApi.listFlows']?.[localVarOperationServerIndex]?.url;
+            return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
+        },
+        /**
+         * 
+         * @summary Update a Flow
+         * @param {string} flowId 
+         * @param {Flow} flow 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async updateFlow(flowId: string, flow: Flow, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Flow>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.updateFlow(flowId, flow, options);
+            const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
+            const localVarOperationServerBasePath = operationServerMap['FlowsApi.updateFlow']?.[localVarOperationServerIndex]?.url;
+            return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
+        },
+    }
+};
+
+/**
+ * FlowsApi - factory interface
+ */
+export const FlowsApiFactory = function (configuration?: Configuration, basePath?: string, axios?: AxiosInstance) {
+    const localVarFp = FlowsApiFp(configuration)
+    return {
+        /**
+         * 
+         * @summary Create a Flow
+         * @param {Flow} flow 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        createFlow(flow: Flow, options?: RawAxiosRequestConfig): AxiosPromise<Flow> {
+            return localVarFp.createFlow(flow, options).then((request) => request(axios, basePath));
+        },
+        /**
+         * 
+         * @summary Delete a Flow
+         * @param {string} flowId 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        deleteFlow(flowId: string, options?: RawAxiosRequestConfig): AxiosPromise<void> {
+            return localVarFp.deleteFlow(flowId, options).then((request) => request(axios, basePath));
+        },
+        /**
+         * 
+         * @summary Get Flow details
+         * @param {string} flowId 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        getFlow(flowId: string, options?: RawAxiosRequestConfig): AxiosPromise<Flow> {
+            return localVarFp.getFlow(flowId, options).then((request) => request(axios, basePath));
+        },
+        /**
+         * 
+         * @summary List Flows in a Zone
+         * @param {string} zoneId 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        listFlows(zoneId: string, options?: RawAxiosRequestConfig): AxiosPromise<ListFlows200Response> {
+            return localVarFp.listFlows(zoneId, options).then((request) => request(axios, basePath));
+        },
+        /**
+         * 
+         * @summary Update a Flow
+         * @param {string} flowId 
+         * @param {Flow} flow 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        updateFlow(flowId: string, flow: Flow, options?: RawAxiosRequestConfig): AxiosPromise<Flow> {
+            return localVarFp.updateFlow(flowId, flow, options).then((request) => request(axios, basePath));
+        },
+    };
+};
+
+/**
+ * FlowsApi - object-oriented interface
+ */
+export class FlowsApi extends BaseAPI {
+    /**
+     * 
+     * @summary Create a Flow
+     * @param {Flow} flow 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    public createFlow(flow: Flow, options?: RawAxiosRequestConfig) {
+        return FlowsApiFp(this.configuration).createFlow(flow, options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * 
+     * @summary Delete a Flow
+     * @param {string} flowId 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    public deleteFlow(flowId: string, options?: RawAxiosRequestConfig) {
+        return FlowsApiFp(this.configuration).deleteFlow(flowId, options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * 
+     * @summary Get Flow details
+     * @param {string} flowId 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    public getFlow(flowId: string, options?: RawAxiosRequestConfig) {
+        return FlowsApiFp(this.configuration).getFlow(flowId, options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * 
+     * @summary List Flows in a Zone
+     * @param {string} zoneId 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    public listFlows(zoneId: string, options?: RawAxiosRequestConfig) {
+        return FlowsApiFp(this.configuration).listFlows(zoneId, options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * 
+     * @summary Update a Flow
+     * @param {string} flowId 
+     * @param {Flow} flow 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    public updateFlow(flowId: string, flow: Flow, options?: RawAxiosRequestConfig) {
+        return FlowsApiFp(this.configuration).updateFlow(flowId, flow, options).then((request) => request(this.axios, this.basePath));
     }
 }
 

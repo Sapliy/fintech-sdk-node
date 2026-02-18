@@ -58,6 +58,15 @@ Class | Method | HTTP request | Description
 *BillingApi* | [**getSubscription**](docs/BillingApi.md#getsubscription) | **GET** /v1/billing/subscriptions/{id} | Get Subscription details
 *BillingApi* | [**v1BillingSubscriptionsPost**](docs/BillingApi.md#v1billingsubscriptionspost) | **POST** /v1/billing/subscriptions | Create Subscription
 *EventsApi* | [**emitEvent**](docs/EventsApi.md#emitevent) | **POST** /v1/events/emit | Emit an Event
+*EventsApi* | [**getPastEvents**](docs/EventsApi.md#getpastevents) | **GET** /v1/zones/{zoneId}/events/past | Get Past Events (Webhook Replay)
+*EventsApi* | [**replayEvent**](docs/EventsApi.md#replayevent) | **POST** /v1/events/{eventId}/replay | Replay an Event
+*ExecutionsApi* | [**getExecution**](docs/ExecutionsApi.md#getexecution) | **GET** /v1/executions/{executionId} | Get Execution details
+*ExecutionsApi* | [**resumeExecution**](docs/ExecutionsApi.md#resumeexecution) | **POST** /v1/executions/{executionId}/resume | Resume a paused Execution
+*FlowsApi* | [**createFlow**](docs/FlowsApi.md#createflow) | **POST** /v1/flows | Create a Flow
+*FlowsApi* | [**deleteFlow**](docs/FlowsApi.md#deleteflow) | **DELETE** /v1/flows/{flowId} | Delete a Flow
+*FlowsApi* | [**getFlow**](docs/FlowsApi.md#getflow) | **GET** /v1/flows/{flowId} | Get Flow details
+*FlowsApi* | [**listFlows**](docs/FlowsApi.md#listflows) | **GET** /v1/zones/{zoneId}/flows | List Flows in a Zone
+*FlowsApi* | [**updateFlow**](docs/FlowsApi.md#updateflow) | **PUT** /v1/flows/{flowId} | Update a Flow
 *LedgerApi* | [**getLedgerAccount**](docs/LedgerApi.md#getledgeraccount) | **GET** /v1/ledger/accounts/{id} | Get Ledger Account details
 *LedgerApi* | [**getLedgerTransaction**](docs/LedgerApi.md#getledgertransaction) | **GET** /v1/ledger/transactions/{id} | Get Ledger Transaction details
 *LedgerApi* | [**v1LedgerAccountsPost**](docs/LedgerApi.md#v1ledgeraccountspost) | **POST** /v1/ledger/accounts | Create Ledger Account
@@ -76,16 +85,27 @@ Class | Method | HTTP request | Description
  - [ConfirmPaymentIntentRequest](docs/ConfirmPaymentIntentRequest.md)
  - [CreatePaymentIntentRequest](docs/CreatePaymentIntentRequest.md)
  - [CreateZoneRequest](docs/CreateZoneRequest.md)
+ - [Edge](docs/Edge.md)
  - [EmitEvent202Response](docs/EmitEvent202Response.md)
  - [EmitEventRequest](docs/EmitEventRequest.md)
  - [ErrorEnvelope](docs/ErrorEnvelope.md)
  - [ErrorEnvelopeError](docs/ErrorEnvelopeError.md)
+ - [ExecutionStep](docs/ExecutionStep.md)
+ - [Flow](docs/Flow.md)
+ - [FlowExecution](docs/FlowExecution.md)
+ - [GetPastEvents200Response](docs/GetPastEvents200Response.md)
  - [LedgerAccount](docs/LedgerAccount.md)
  - [LedgerEntry](docs/LedgerEntry.md)
  - [LedgerTransaction](docs/LedgerTransaction.md)
+ - [ListFlows200Response](docs/ListFlows200Response.md)
  - [ListZones200ResponseInner](docs/ListZones200ResponseInner.md)
+ - [Node](docs/Node.md)
  - [PaymentIntent](docs/PaymentIntent.md)
+ - [ReplayEvent200Response](docs/ReplayEvent200Response.md)
+ - [ReplayEventRequest](docs/ReplayEventRequest.md)
+ - [ResumeExecution200Response](docs/ResumeExecution200Response.md)
  - [Subscription](docs/Subscription.md)
+ - [Trigger](docs/Trigger.md)
  - [User](docs/User.md)
  - [V1AuthRegisterPost201Response](docs/V1AuthRegisterPost201Response.md)
  - [V1AuthRegisterPostRequest](docs/V1AuthRegisterPostRequest.md)
