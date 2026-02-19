@@ -1,4 +1,4 @@
-# Trigger
+# AutomationFlowTrigger
 
 
 ## Properties
@@ -12,9 +12,9 @@ Name | Type | Description | Notes
 ## Example
 
 ```typescript
-import { Trigger } from '@sapliyio/fintech-node-generated';
+import { AutomationFlowTrigger } from '@sapliyio/fintech-node-generated';
 
-const instance: Trigger = {
+const instance: AutomationFlowTrigger = {
     type,
     event_type,
     config,

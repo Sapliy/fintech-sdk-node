@@ -1,4 +1,4 @@
-# V1WalletsTopupPostRequest
+# TopupWalletRequest
 
 
 ## Properties
@@ -12,9 +12,9 @@ Name | Type | Description | Notes
 ## Example
 
 ```typescript
-import { V1WalletsTopupPostRequest } from '@sapliyio/fintech-node-generated';
+import { TopupWalletRequest } from '@sapliyio/fintech-node-generated';
 
-const instance: V1WalletsTopupPostRequest = {
+const instance: TopupWalletRequest = {
     amount,
     currency,
     reference_id,

@@ -11,7 +11,7 @@ All URIs are relative to *https://api.sapliy.io*
 |[**updateFlow**](#updateflow) | **PUT** /v1/flows/{flowId} | Update a Flow|
 
 # **createFlow**
-> Flow createFlow(flow)
+> AutomationFlow createFlow(automationFlow)
 
 
 ### Example
@@ -20,16 +20,16 @@ All URIs are relative to *https://api.sapliy.io*
 import {
     FlowsApi,
     Configuration,
-    Flow
+    AutomationFlow
 } from '@sapliyio/fintech-node-generated';
 
 const configuration = new Configuration();
 const apiInstance = new FlowsApi(configuration);
 
-let flow: Flow; //
+let automationFlow: AutomationFlow; //
 
 const { status, data } = await apiInstance.createFlow(
-    flow
+    automationFlow
 );
 ```
 
@@ -37,12 +37,12 @@ const { status, data } = await apiInstance.createFlow(
 
 |Name | Type | Description  | Notes|
 |------------- | ------------- | ------------- | -------------|
-| **flow** | **Flow**|  | |
+| **automationFlow** | **AutomationFlow**|  | |
 
 
 ### Return type
 
-**Flow**
+**AutomationFlow**
 
 ### Authorization
 
@@ -112,7 +112,7 @@ void (empty response body)
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
 # **getFlow**
-> Flow getFlow()
+> AutomationFlow getFlow()
 
 
 ### Example
@@ -142,7 +142,7 @@ const { status, data } = await apiInstance.getFlow(
 
 ### Return type
 
-**Flow**
+**AutomationFlow**
 
 ### Authorization
 
@@ -212,7 +212,7 @@ const { status, data } = await apiInstance.listFlows(
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
 # **updateFlow**
-> Flow updateFlow(flow)
+> AutomationFlow updateFlow(automationFlow)
 
 
 ### Example
@@ -221,18 +221,18 @@ const { status, data } = await apiInstance.listFlows(
 import {
     FlowsApi,
     Configuration,
-    Flow
+    AutomationFlow
 } from '@sapliyio/fintech-node-generated';
 
 const configuration = new Configuration();
 const apiInstance = new FlowsApi(configuration);
 
 let flowId: string; // (default to undefined)
-let flow: Flow; //
+let automationFlow: AutomationFlow; //
 
 const { status, data } = await apiInstance.updateFlow(
     flowId,
-    flow
+    automationFlow
 );
 ```
 
@@ -240,13 +240,13 @@ const { status, data } = await apiInstance.updateFlow(
 
 |Name | Type | Description  | Notes|
 |------------- | ------------- | ------------- | -------------|
-| **flow** | **Flow**|  | |
+| **automationFlow** | **AutomationFlow**|  | |
 | **flowId** | [**string**] |  | defaults to undefined|
 
 
 ### Return type
 
-**Flow**
+**AutomationFlow**
 
 ### Authorization
 

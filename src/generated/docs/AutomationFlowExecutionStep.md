@@ -1,4 +1,4 @@
-# ExecutionStep
+# AutomationFlowExecutionStep
 
 
 ## Properties
@@ -14,9 +14,9 @@ Name | Type | Description | Notes
 ## Example
 
 ```typescript
-import { ExecutionStep } from '@sapliyio/fintech-node-generated';
+import { AutomationFlowExecutionStep } from '@sapliyio/fintech-node-generated';
 
-const instance: ExecutionStep = {
+const instance: AutomationFlowExecutionStep = {
     node_id,
     status,
     input,

@@ -5,15 +5,10 @@
 
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
-**id** | **string** |  | [optional] [default to undefined]
-**userId** | **string** |  | [optional] [default to undefined]
-**orgId** | **string** |  | [optional] [default to undefined]
-**planId** | **string** |  | [optional] [default to undefined]
-**status** | **string** |  | [optional] [default to undefined]
-**currentPeriodStart** | **string** |  | [optional] [default to undefined]
-**currentPeriodEnd** | **string** |  | [optional] [default to undefined]
-**createdAt** | **string** |  | [optional] [default to undefined]
-**canceledAt** | **string** |  | [optional] [default to undefined]
+**id** | **string** |  | [default to undefined]
+**status** | **string** |  | [default to undefined]
+**plan_id** | **string** |  | [default to undefined]
+**current_period_end** | **string** |  | [optional] [default to undefined]
 
 ## Example
 
@@ -22,14 +17,9 @@ import { BillingSubscription } from '@sapliyio/fintech-node-generated';
 
 const instance: BillingSubscription = {
     id,
-    userId,
-    orgId,
-    planId,
     status,
-    currentPeriodStart,
-    currentPeriodEnd,
-    createdAt,
-    canceledAt,
+    plan_id,
+    current_period_end,
 };
 ```
 

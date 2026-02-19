@@ -1,4 +1,4 @@
-# FlowExecution
+# AutomationFlowExecution
 
 
 ## Properties
@@ -13,16 +13,16 @@ Name | Type | Description | Notes
 **current_node_id** | **string** |  | [optional] [default to undefined]
 **input** | **object** |  | [optional] [default to undefined]
 **output** | **object** |  | [optional] [default to undefined]
-**steps** | [**Array&lt;ExecutionStep&gt;**](ExecutionStep.md) |  | [optional] [default to undefined]
+**steps** | [**Array&lt;AutomationFlowExecutionStep&gt;**](AutomationFlowExecutionStep.md) |  | [optional] [default to undefined]
 **started_at** | **string** |  | [optional] [default to undefined]
 **ended_at** | **string** |  | [optional] [default to undefined]
 
 ## Example
 
 ```typescript
-import { FlowExecution } from '@sapliyio/fintech-node-generated';
+import { AutomationFlowExecution } from '@sapliyio/fintech-node-generated';
 
-const instance: FlowExecution = {
+const instance: AutomationFlowExecution = {
     id,
     flow_id,
     flow_version,

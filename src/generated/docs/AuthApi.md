@@ -4,12 +4,12 @@ All URIs are relative to *https://api.sapliy.io*
 
 |Method | HTTP request | Description|
 |------------- | ------------- | -------------|
-|[**v1AuthLoginPost**](#v1authloginpost) | **POST** /v1/auth/login | Login|
-|[**v1AuthRegisterPost**](#v1authregisterpost) | **POST** /v1/auth/register | Register a new user|
+|[**loginUser**](#loginuser) | **POST** /v1/auth/login | Login|
+|[**registerUser**](#registeruser) | **POST** /v1/auth/register | Register a new user|
 |[**validateKey**](#validatekey) | **POST** /v1/auth/validate | Validate an API key|
 
-# **v1AuthLoginPost**
-> V1AuthRegisterPost201Response v1AuthLoginPost(v1AuthRegisterPostRequest)
+# **loginUser**
+> RegisterUser201Response loginUser(registerUserRequest)
 
 
 ### Example
@@ -18,16 +18,16 @@ All URIs are relative to *https://api.sapliy.io*
 import {
     AuthApi,
     Configuration,
-    V1AuthRegisterPostRequest
+    RegisterUserRequest
 } from '@sapliyio/fintech-node-generated';
 
 const configuration = new Configuration();
 const apiInstance = new AuthApi(configuration);
 
-let v1AuthRegisterPostRequest: V1AuthRegisterPostRequest; //
+let registerUserRequest: RegisterUserRequest; //
 
-const { status, data } = await apiInstance.v1AuthLoginPost(
-    v1AuthRegisterPostRequest
+const { status, data } = await apiInstance.loginUser(
+    registerUserRequest
 );
 ```
 
@@ -35,12 +35,12 @@ const { status, data } = await apiInstance.v1AuthLoginPost(
 
 |Name | Type | Description  | Notes|
 |------------- | ------------- | ------------- | -------------|
-| **v1AuthRegisterPostRequest** | **V1AuthRegisterPostRequest**|  | |
+| **registerUserRequest** | **RegisterUserRequest**|  | |
 
 
 ### Return type
 
-**V1AuthRegisterPost201Response**
+**RegisterUser201Response**
 
 ### Authorization
 
@@ -59,8 +59,8 @@ No authorization required
 
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
-# **v1AuthRegisterPost**
-> V1AuthRegisterPost201Response v1AuthRegisterPost(v1AuthRegisterPostRequest)
+# **registerUser**
+> RegisterUser201Response registerUser(registerUserRequest)
 
 
 ### Example
@@ -69,16 +69,16 @@ No authorization required
 import {
     AuthApi,
     Configuration,
-    V1AuthRegisterPostRequest
+    RegisterUserRequest
 } from '@sapliyio/fintech-node-generated';
 
 const configuration = new Configuration();
 const apiInstance = new AuthApi(configuration);
 
-let v1AuthRegisterPostRequest: V1AuthRegisterPostRequest; //
+let registerUserRequest: RegisterUserRequest; //
 
-const { status, data } = await apiInstance.v1AuthRegisterPost(
-    v1AuthRegisterPostRequest
+const { status, data } = await apiInstance.registerUser(
+    registerUserRequest
 );
 ```
 
@@ -86,12 +86,12 @@ const { status, data } = await apiInstance.v1AuthRegisterPost(
 
 |Name | Type | Description  | Notes|
 |------------- | ------------- | ------------- | -------------|
-| **v1AuthRegisterPostRequest** | **V1AuthRegisterPostRequest**|  | |
+| **registerUserRequest** | **RegisterUserRequest**|  | |
 
 
 ### Return type
 
-**V1AuthRegisterPost201Response**
+**RegisterUser201Response**
 
 ### Authorization
 

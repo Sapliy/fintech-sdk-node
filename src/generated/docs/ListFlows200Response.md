@@ -5,7 +5,7 @@
 
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
-**flows** | [**Array&lt;Flow&gt;**](Flow.md) |  | [optional] [default to undefined]
+**flows** | [**Array&lt;AutomationFlow&gt;**](AutomationFlow.md) |  | [optional] [default to undefined]
 **count** | **number** |  | [optional] [default to undefined]
 
 ## Example

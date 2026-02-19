@@ -1,4 +1,4 @@
-# Flow
+# AutomationFlow
 
 
 ## Properties
@@ -12,18 +12,18 @@ Name | Type | Description | Notes
 **description** | **string** |  | [optional] [default to undefined]
 **enabled** | **boolean** |  | [optional] [default to undefined]
 **version** | **number** |  | [optional] [default to undefined]
-**trigger** | [**Trigger**](Trigger.md) |  | [optional] [default to undefined]
-**nodes** | [**Array&lt;Node&gt;**](Node.md) |  | [optional] [default to undefined]
-**edges** | [**Array&lt;Edge&gt;**](Edge.md) |  | [optional] [default to undefined]
+**trigger** | [**AutomationFlowTrigger**](AutomationFlowTrigger.md) |  | [optional] [default to undefined]
+**nodes** | [**Array&lt;AutomationFlowNode&gt;**](AutomationFlowNode.md) |  | [optional] [default to undefined]
+**edges** | [**Array&lt;AutomationFlowEdge&gt;**](AutomationFlowEdge.md) |  | [optional] [default to undefined]
 **created_at** | **string** |  | [optional] [default to undefined]
 **updated_at** | **string** |  | [optional] [default to undefined]
 
 ## Example
 
 ```typescript
-import { Flow } from '@sapliyio/fintech-node-generated';
+import { AutomationFlow } from '@sapliyio/fintech-node-generated';
 
-const instance: Flow = {
+const instance: AutomationFlow = {
     id,
     org_id,
     zone_id,

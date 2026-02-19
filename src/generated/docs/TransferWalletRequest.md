@@ -1,4 +1,4 @@
-# V1WalletsTransferPostRequest
+# TransferWalletRequest
 
 
 ## Properties
@@ -13,9 +13,9 @@ Name | Type | Description | Notes
 ## Example
 
 ```typescript
-import { V1WalletsTransferPostRequest } from '@sapliyio/fintech-node-generated';
+import { TransferWalletRequest } from '@sapliyio/fintech-node-generated';
 
-const instance: V1WalletsTransferPostRequest = {
+const instance: TransferWalletRequest = {
     to_user_id,
     amount,
     currency,

@@ -8,7 +8,7 @@ All URIs are relative to *https://api.sapliy.io*
 |[**resumeExecution**](#resumeexecution) | **POST** /v1/executions/{executionId}/resume | Resume a paused Execution|
 
 # **getExecution**
-> FlowExecution getExecution()
+> AutomationFlowExecution getExecution()
 
 
 ### Example
@@ -38,7 +38,7 @@ const { status, data } = await apiInstance.getExecution(
 
 ### Return type
 
-**FlowExecution**
+**AutomationFlowExecution**
 
 ### Authorization
 

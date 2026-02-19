@@ -23,6 +23,84 @@ import type { RequestArgs } from './base';
 // @ts-ignore
 import { BASE_PATH, COLLECTION_FORMATS, BaseAPI, RequiredError, operationServerMap } from './base';
 
+export interface AutomationFlow {
+    'id': string;
+    'org_id'?: string;
+    'zone_id': string;
+    'name': string;
+    'description'?: string;
+    'enabled'?: boolean;
+    'version'?: number;
+    'trigger'?: AutomationFlowTrigger;
+    'nodes'?: Array<AutomationFlowNode>;
+    'edges'?: Array<AutomationFlowEdge>;
+    'created_at'?: string;
+    'updated_at'?: string;
+}
+export interface AutomationFlowEdge {
+    'id': string;
+    'source': string;
+    'target': string;
+    'source_handle'?: string;
+}
+export interface AutomationFlowExecution {
+    'id': string;
+    'flow_id': string;
+    'flow_version'?: number;
+    'trigger_id'?: string;
+    'status': AutomationFlowExecutionStatusEnum;
+    'current_node_id'?: string;
+    'input'?: object;
+    'output'?: object;
+    'steps'?: Array<AutomationFlowExecutionStep>;
+    'started_at'?: string;
+    'ended_at'?: string;
+}
+
+export const AutomationFlowExecutionStatusEnum = {
+    Pending: 'pending',
+    Running: 'running',
+    Paused: 'paused',
+    Completed: 'completed',
+    Failed: 'failed'
+} as const;
+
+export type AutomationFlowExecutionStatusEnum = typeof AutomationFlowExecutionStatusEnum[keyof typeof AutomationFlowExecutionStatusEnum];
+
+export interface AutomationFlowExecutionStep {
+    'node_id': string;
+    'status': string;
+    'input'?: object;
+    'output'?: object;
+    'error'?: string;
+}
+export interface AutomationFlowNode {
+    'id': string;
+    'type': string;
+    'position'?: object;
+    'data'?: object;
+}
+export interface AutomationFlowTrigger {
+    'type': string;
+    'event_type'?: string;
+    'config'?: object;
+}
+export interface BillingSubscription {
+    'id': string;
+    'status': BillingSubscriptionStatusEnum;
+    'plan_id': string;
+    'current_period_end'?: string;
+}
+
+export const BillingSubscriptionStatusEnum = {
+    Active: 'active',
+    Canceled: 'canceled',
+    PastDue: 'past_due',
+    Incomplete: 'incomplete'
+} as const;
+
+export type BillingSubscriptionStatusEnum = typeof BillingSubscriptionStatusEnum[keyof typeof BillingSubscriptionStatusEnum];
+
 export interface ConfirmPaymentIntentRequest {
     'payment_method_id'?: string;
 }
@@ -31,6 +109,10 @@ export interface CreatePaymentIntentRequest {
     'currency': string;
     'description'?: string;
     'metadata'?: { [key: string]: string; };
+}
+export interface CreateSubscriptionRequest {
+    'plan_id': string;
+    'customer_id'?: string;
 }
 export interface CreateZoneRequest {
     'org_id': string;
@@ -46,12 +128,6 @@ export const CreateZoneRequestModeEnum = {
 
 export type CreateZoneRequestModeEnum = typeof CreateZoneRequestModeEnum[keyof typeof CreateZoneRequestModeEnum];
 
-export interface Edge {
-    'id': string;
-    'source': string;
-    'target': string;
-    'source_handle'?: string;
-}
 export interface EmitEvent202Response {
     'event_id'?: string;
     'status'?: string;
@@ -70,51 +146,6 @@ export interface ErrorEnvelopeError {
     'request_id'?: string;
     'trace_id'?: string;
 }
-export interface ExecutionStep {
-    'node_id': string;
-    'status': string;
-    'input'?: object;
-    'output'?: object;
-    'error'?: string;
-}
-export interface Flow {
-    'id': string;
-    'org_id'?: string;
-    'zone_id': string;
-    'name': string;
-    'description'?: string;
-    'enabled'?: boolean;
-    'version'?: number;
-    'trigger'?: Trigger;
-    'nodes'?: Array<Node>;
-    'edges'?: Array<Edge>;
-    'created_at'?: string;
-    'updated_at'?: string;
-}
-export interface FlowExecution {
-    'id': string;
-    'flow_id': string;
-    'flow_version'?: number;
-    'trigger_id'?: string;
-    'status': FlowExecutionStatusEnum;
-    'current_node_id'?: string;
-    'input'?: object;
-    'output'?: object;
-    'steps'?: Array<ExecutionStep>;
-    'started_at'?: string;
-    'ended_at'?: string;
-}
-
-export const FlowExecutionStatusEnum = {
-    Pending: 'pending',
-    Running: 'running',
-    Paused: 'paused',
-    Completed: 'completed',
-    Failed: 'failed'
-} as const;
-
-export type FlowExecutionStatusEnum = typeof FlowExecutionStatusEnum[keyof typeof FlowExecutionStatusEnum];
-
 export interface GetPastEvents200Response {
     'events'?: Array<object>;
     'limit'?: number;
@@ -139,7 +170,7 @@ export interface LedgerTransaction {
     'entries'?: Array<LedgerEntry>;
 }
 export interface ListFlows200Response {
-    'flows'?: Array<Flow>;
+    'flows'?: Array<AutomationFlow>;
     'count'?: number;
 }
 export interface ListZones200ResponseInner {
@@ -147,12 +178,6 @@ export interface ListZones200ResponseInner {
     'org_id'?: string;
     'name'?: string;
     'mode'?: string;
-}
-export interface Node {
-    'id': string;
-    'type': string;
-    'position'?: object;
-    'data'?: object;
 }
 export interface PaymentIntent {
     'id': string;
@@ -180,6 +205,14 @@ export const PaymentIntentStatusEnum = {
 
 export type PaymentIntentStatusEnum = typeof PaymentIntentStatusEnum[keyof typeof PaymentIntentStatusEnum];
 
+export interface RegisterUser201Response {
+    'token'?: string;
+    'user'?: User;
+}
+export interface RegisterUserRequest {
+    'email': string;
+    'password': string;
+}
 export interface ReplayEvent200Response {
     'message'?: string;
     'eventId'?: string;
@@ -191,43 +224,25 @@ export interface ReplayEventRequest {
 export interface ResumeExecution200Response {
     'message'?: string;
 }
-export interface Subscription {
-    'id': string;
-    'status': SubscriptionStatusEnum;
-    'plan_id': string;
-    'current_period_end'?: string;
+export interface TopupWallet200Response {
+    'transaction_id'?: string;
+    'status'?: string;
 }
-
-export const SubscriptionStatusEnum = {
-    Active: 'active',
-    Canceled: 'canceled',
-    PastDue: 'past_due',
-    Incomplete: 'incomplete'
-} as const;
-
-export type SubscriptionStatusEnum = typeof SubscriptionStatusEnum[keyof typeof SubscriptionStatusEnum];
-
-export interface Trigger {
-    'type': string;
-    'event_type'?: string;
-    'config'?: object;
+export interface TopupWalletRequest {
+    'amount': number;
+    'currency': string;
+    'reference_id': string;
+}
+export interface TransferWalletRequest {
+    'to_user_id': string;
+    'amount': number;
+    'currency': string;
+    'reference_id': string;
 }
 export interface User {
     'id': string;
     'email': string;
     'email_verified'?: boolean;
-}
-export interface V1AuthRegisterPost201Response {
-    'token'?: string;
-    'user'?: User;
-}
-export interface V1AuthRegisterPostRequest {
-    'email': string;
-    'password': string;
-}
-export interface V1BillingSubscriptionsPostRequest {
-    'plan_id': string;
-    'customer_id'?: string;
 }
 export interface V1LedgerAccountsPostRequest {
     'name': string;
@@ -242,21 +257,6 @@ export interface V1LedgerTransactionsPostRequest {
     'reference_id': string;
     'description'?: string;
     'entries': Array<LedgerEntry>;
-}
-export interface V1WalletsTopupPost200Response {
-    'transaction_id'?: string;
-    'status'?: string;
-}
-export interface V1WalletsTopupPostRequest {
-    'amount': number;
-    'currency': string;
-    'reference_id': string;
-}
-export interface V1WalletsTransferPostRequest {
-    'to_user_id': string;
-    'amount': number;
-    'currency': string;
-    'reference_id': string;
 }
 export interface ValidateKey200Response {
     'valid'?: boolean;
@@ -283,13 +283,13 @@ export const AuthApiAxiosParamCreator = function (configuration?: Configuration)
         /**
          * 
          * @summary Login
-         * @param {V1AuthRegisterPostRequest} v1AuthRegisterPostRequest 
+         * @param {RegisterUserRequest} registerUserRequest 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        v1AuthLoginPost: async (v1AuthRegisterPostRequest: V1AuthRegisterPostRequest, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
-            // verify required parameter 'v1AuthRegisterPostRequest' is not null or undefined
-            assertParamExists('v1AuthLoginPost', 'v1AuthRegisterPostRequest', v1AuthRegisterPostRequest)
+        loginUser: async (registerUserRequest: RegisterUserRequest, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+            // verify required parameter 'registerUserRequest' is not null or undefined
+            assertParamExists('loginUser', 'registerUserRequest', registerUserRequest)
             const localVarPath = `/v1/auth/login`;
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
@@ -308,7 +308,7 @@ export const AuthApiAxiosParamCreator = function (configuration?: Configuration)
             setSearchParams(localVarUrlObj, localVarQueryParameter);
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
             localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
-            localVarRequestOptions.data = serializeDataIfNeeded(v1AuthRegisterPostRequest, localVarRequestOptions, configuration)
+            localVarRequestOptions.data = serializeDataIfNeeded(registerUserRequest, localVarRequestOptions, configuration)
 
             return {
                 url: toPathString(localVarUrlObj),
@@ -318,13 +318,13 @@ export const AuthApiAxiosParamCreator = function (configuration?: Configuration)
         /**
          * 
          * @summary Register a new user
-         * @param {V1AuthRegisterPostRequest} v1AuthRegisterPostRequest 
+         * @param {RegisterUserRequest} registerUserRequest 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        v1AuthRegisterPost: async (v1AuthRegisterPostRequest: V1AuthRegisterPostRequest, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
-            // verify required parameter 'v1AuthRegisterPostRequest' is not null or undefined
-            assertParamExists('v1AuthRegisterPost', 'v1AuthRegisterPostRequest', v1AuthRegisterPostRequest)
+        registerUser: async (registerUserRequest: RegisterUserRequest, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+            // verify required parameter 'registerUserRequest' is not null or undefined
+            assertParamExists('registerUser', 'registerUserRequest', registerUserRequest)
             const localVarPath = `/v1/auth/register`;
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
@@ -343,7 +343,7 @@ export const AuthApiAxiosParamCreator = function (configuration?: Configuration)
             setSearchParams(localVarUrlObj, localVarQueryParameter);
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
             localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
-            localVarRequestOptions.data = serializeDataIfNeeded(v1AuthRegisterPostRequest, localVarRequestOptions, configuration)
+            localVarRequestOptions.data = serializeDataIfNeeded(registerUserRequest, localVarRequestOptions, configuration)
 
             return {
                 url: toPathString(localVarUrlObj),
@@ -397,27 +397,27 @@ export const AuthApiFp = function(configuration?: Configuration) {
         /**
          * 
          * @summary Login
-         * @param {V1AuthRegisterPostRequest} v1AuthRegisterPostRequest 
+         * @param {RegisterUserRequest} registerUserRequest 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async v1AuthLoginPost(v1AuthRegisterPostRequest: V1AuthRegisterPostRequest, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<V1AuthRegisterPost201Response>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.v1AuthLoginPost(v1AuthRegisterPostRequest, options);
+        async loginUser(registerUserRequest: RegisterUserRequest, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<RegisterUser201Response>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.loginUser(registerUserRequest, options);
             const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
-            const localVarOperationServerBasePath = operationServerMap['AuthApi.v1AuthLoginPost']?.[localVarOperationServerIndex]?.url;
+            const localVarOperationServerBasePath = operationServerMap['AuthApi.loginUser']?.[localVarOperationServerIndex]?.url;
             return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
         },
         /**
          * 
          * @summary Register a new user
-         * @param {V1AuthRegisterPostRequest} v1AuthRegisterPostRequest 
+         * @param {RegisterUserRequest} registerUserRequest 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async v1AuthRegisterPost(v1AuthRegisterPostRequest: V1AuthRegisterPostRequest, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<V1AuthRegisterPost201Response>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.v1AuthRegisterPost(v1AuthRegisterPostRequest, options);
+        async registerUser(registerUserRequest: RegisterUserRequest, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<RegisterUser201Response>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.registerUser(registerUserRequest, options);
             const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
-            const localVarOperationServerBasePath = operationServerMap['AuthApi.v1AuthRegisterPost']?.[localVarOperationServerIndex]?.url;
+            const localVarOperationServerBasePath = operationServerMap['AuthApi.registerUser']?.[localVarOperationServerIndex]?.url;
             return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
         },
         /**
@@ -445,22 +445,22 @@ export const AuthApiFactory = function (configuration?: Configuration, basePath?
         /**
          * 
          * @summary Login
-         * @param {V1AuthRegisterPostRequest} v1AuthRegisterPostRequest 
+         * @param {RegisterUserRequest} registerUserRequest 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        v1AuthLoginPost(v1AuthRegisterPostRequest: V1AuthRegisterPostRequest, options?: RawAxiosRequestConfig): AxiosPromise<V1AuthRegisterPost201Response> {
-            return localVarFp.v1AuthLoginPost(v1AuthRegisterPostRequest, options).then((request) => request(axios, basePath));
+        loginUser(registerUserRequest: RegisterUserRequest, options?: RawAxiosRequestConfig): AxiosPromise<RegisterUser201Response> {
+            return localVarFp.loginUser(registerUserRequest, options).then((request) => request(axios, basePath));
         },
         /**
          * 
          * @summary Register a new user
-         * @param {V1AuthRegisterPostRequest} v1AuthRegisterPostRequest 
+         * @param {RegisterUserRequest} registerUserRequest 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        v1AuthRegisterPost(v1AuthRegisterPostRequest: V1AuthRegisterPostRequest, options?: RawAxiosRequestConfig): AxiosPromise<V1AuthRegisterPost201Response> {
-            return localVarFp.v1AuthRegisterPost(v1AuthRegisterPostRequest, options).then((request) => request(axios, basePath));
+        registerUser(registerUserRequest: RegisterUserRequest, options?: RawAxiosRequestConfig): AxiosPromise<RegisterUser201Response> {
+            return localVarFp.registerUser(registerUserRequest, options).then((request) => request(axios, basePath));
         },
         /**
          * 
@@ -482,23 +482,23 @@ export class AuthApi extends BaseAPI {
     /**
      * 
      * @summary Login
-     * @param {V1AuthRegisterPostRequest} v1AuthRegisterPostRequest 
+     * @param {RegisterUserRequest} registerUserRequest 
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
-    public v1AuthLoginPost(v1AuthRegisterPostRequest: V1AuthRegisterPostRequest, options?: RawAxiosRequestConfig) {
-        return AuthApiFp(this.configuration).v1AuthLoginPost(v1AuthRegisterPostRequest, options).then((request) => request(this.axios, this.basePath));
+    public loginUser(registerUserRequest: RegisterUserRequest, options?: RawAxiosRequestConfig) {
+        return AuthApiFp(this.configuration).loginUser(registerUserRequest, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**
      * 
      * @summary Register a new user
-     * @param {V1AuthRegisterPostRequest} v1AuthRegisterPostRequest 
+     * @param {RegisterUserRequest} registerUserRequest 
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
-    public v1AuthRegisterPost(v1AuthRegisterPostRequest: V1AuthRegisterPostRequest, options?: RawAxiosRequestConfig) {
-        return AuthApiFp(this.configuration).v1AuthRegisterPost(v1AuthRegisterPostRequest, options).then((request) => request(this.axios, this.basePath));
+    public registerUser(registerUserRequest: RegisterUserRequest, options?: RawAxiosRequestConfig) {
+        return AuthApiFp(this.configuration).registerUser(registerUserRequest, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**
@@ -559,6 +559,45 @@ export const BillingApiAxiosParamCreator = function (configuration?: Configurati
         },
         /**
          * 
+         * @summary Create Subscription
+         * @param {CreateSubscriptionRequest} createSubscriptionRequest 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        createSubscription: async (createSubscriptionRequest: CreateSubscriptionRequest, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+            // verify required parameter 'createSubscriptionRequest' is not null or undefined
+            assertParamExists('createSubscription', 'createSubscriptionRequest', createSubscriptionRequest)
+            const localVarPath = `/v1/billing/subscriptions`;
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'POST', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+            // authentication ApiKeyAuth required
+            // http bearer authentication required
+            await setBearerAuthToObject(localVarHeaderParameter, configuration)
+
+            localVarHeaderParameter['Content-Type'] = 'application/json';
+            localVarHeaderParameter['Accept'] = 'application/json';
+
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+            localVarRequestOptions.data = serializeDataIfNeeded(createSubscriptionRequest, localVarRequestOptions, configuration)
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * 
          * @summary Get Subscription details
          * @param {string} id 
          * @param {*} [options] Override http request option.
@@ -595,45 +634,6 @@ export const BillingApiAxiosParamCreator = function (configuration?: Configurati
                 options: localVarRequestOptions,
             };
         },
-        /**
-         * 
-         * @summary Create Subscription
-         * @param {V1BillingSubscriptionsPostRequest} v1BillingSubscriptionsPostRequest 
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        v1BillingSubscriptionsPost: async (v1BillingSubscriptionsPostRequest: V1BillingSubscriptionsPostRequest, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
-            // verify required parameter 'v1BillingSubscriptionsPostRequest' is not null or undefined
-            assertParamExists('v1BillingSubscriptionsPost', 'v1BillingSubscriptionsPostRequest', v1BillingSubscriptionsPostRequest)
-            const localVarPath = `/v1/billing/subscriptions`;
-            // use dummy base URL string because the URL constructor only accepts absolute URLs.
-            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
-            let baseOptions;
-            if (configuration) {
-                baseOptions = configuration.baseOptions;
-            }
-
-            const localVarRequestOptions = { method: 'POST', ...baseOptions, ...options};
-            const localVarHeaderParameter = {} as any;
-            const localVarQueryParameter = {} as any;
-
-            // authentication ApiKeyAuth required
-            // http bearer authentication required
-            await setBearerAuthToObject(localVarHeaderParameter, configuration)
-
-            localVarHeaderParameter['Content-Type'] = 'application/json';
-            localVarHeaderParameter['Accept'] = 'application/json';
-
-            setSearchParams(localVarUrlObj, localVarQueryParameter);
-            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
-            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
-            localVarRequestOptions.data = serializeDataIfNeeded(v1BillingSubscriptionsPostRequest, localVarRequestOptions, configuration)
-
-            return {
-                url: toPathString(localVarUrlObj),
-                options: localVarRequestOptions,
-            };
-        },
     }
 };
 
@@ -658,28 +658,28 @@ export const BillingApiFp = function(configuration?: Configuration) {
         },
         /**
          * 
+         * @summary Create Subscription
+         * @param {CreateSubscriptionRequest} createSubscriptionRequest 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async createSubscription(createSubscriptionRequest: CreateSubscriptionRequest, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<BillingSubscription>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.createSubscription(createSubscriptionRequest, options);
+            const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
+            const localVarOperationServerBasePath = operationServerMap['BillingApi.createSubscription']?.[localVarOperationServerIndex]?.url;
+            return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
+        },
+        /**
+         * 
          * @summary Get Subscription details
          * @param {string} id 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async getSubscription(id: string, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Subscription>> {
+        async getSubscription(id: string, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<BillingSubscription>> {
             const localVarAxiosArgs = await localVarAxiosParamCreator.getSubscription(id, options);
             const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
             const localVarOperationServerBasePath = operationServerMap['BillingApi.getSubscription']?.[localVarOperationServerIndex]?.url;
-            return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
-        },
-        /**
-         * 
-         * @summary Create Subscription
-         * @param {V1BillingSubscriptionsPostRequest} v1BillingSubscriptionsPostRequest 
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        async v1BillingSubscriptionsPost(v1BillingSubscriptionsPostRequest: V1BillingSubscriptionsPostRequest, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Subscription>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.v1BillingSubscriptionsPost(v1BillingSubscriptionsPostRequest, options);
-            const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
-            const localVarOperationServerBasePath = operationServerMap['BillingApi.v1BillingSubscriptionsPost']?.[localVarOperationServerIndex]?.url;
             return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
         },
     }
@@ -703,23 +703,23 @@ export const BillingApiFactory = function (configuration?: Configuration, basePa
         },
         /**
          * 
+         * @summary Create Subscription
+         * @param {CreateSubscriptionRequest} createSubscriptionRequest 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        createSubscription(createSubscriptionRequest: CreateSubscriptionRequest, options?: RawAxiosRequestConfig): AxiosPromise<BillingSubscription> {
+            return localVarFp.createSubscription(createSubscriptionRequest, options).then((request) => request(axios, basePath));
+        },
+        /**
+         * 
          * @summary Get Subscription details
          * @param {string} id 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        getSubscription(id: string, options?: RawAxiosRequestConfig): AxiosPromise<Subscription> {
+        getSubscription(id: string, options?: RawAxiosRequestConfig): AxiosPromise<BillingSubscription> {
             return localVarFp.getSubscription(id, options).then((request) => request(axios, basePath));
-        },
-        /**
-         * 
-         * @summary Create Subscription
-         * @param {V1BillingSubscriptionsPostRequest} v1BillingSubscriptionsPostRequest 
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        v1BillingSubscriptionsPost(v1BillingSubscriptionsPostRequest: V1BillingSubscriptionsPostRequest, options?: RawAxiosRequestConfig): AxiosPromise<Subscription> {
-            return localVarFp.v1BillingSubscriptionsPost(v1BillingSubscriptionsPostRequest, options).then((request) => request(axios, basePath));
         },
     };
 };
@@ -741,6 +741,17 @@ export class BillingApi extends BaseAPI {
 
     /**
      * 
+     * @summary Create Subscription
+     * @param {CreateSubscriptionRequest} createSubscriptionRequest 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    public createSubscription(createSubscriptionRequest: CreateSubscriptionRequest, options?: RawAxiosRequestConfig) {
+        return BillingApiFp(this.configuration).createSubscription(createSubscriptionRequest, options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * 
      * @summary Get Subscription details
      * @param {string} id 
      * @param {*} [options] Override http request option.
@@ -748,17 +759,6 @@ export class BillingApi extends BaseAPI {
      */
     public getSubscription(id: string, options?: RawAxiosRequestConfig) {
         return BillingApiFp(this.configuration).getSubscription(id, options).then((request) => request(this.axios, this.basePath));
-    }
-
-    /**
-     * 
-     * @summary Create Subscription
-     * @param {V1BillingSubscriptionsPostRequest} v1BillingSubscriptionsPostRequest 
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     */
-    public v1BillingSubscriptionsPost(v1BillingSubscriptionsPostRequest: V1BillingSubscriptionsPostRequest, options?: RawAxiosRequestConfig) {
-        return BillingApiFp(this.configuration).v1BillingSubscriptionsPost(v1BillingSubscriptionsPostRequest, options).then((request) => request(this.axios, this.basePath));
     }
 }
 
@@ -1138,7 +1138,7 @@ export const ExecutionsApiFp = function(configuration?: Configuration) {
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async getExecution(executionId: string, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<FlowExecution>> {
+        async getExecution(executionId: string, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<AutomationFlowExecution>> {
             const localVarAxiosArgs = await localVarAxiosParamCreator.getExecution(executionId, options);
             const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
             const localVarOperationServerBasePath = operationServerMap['ExecutionsApi.getExecution']?.[localVarOperationServerIndex]?.url;
@@ -1174,7 +1174,7 @@ export const ExecutionsApiFactory = function (configuration?: Configuration, bas
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        getExecution(executionId: string, options?: RawAxiosRequestConfig): AxiosPromise<FlowExecution> {
+        getExecution(executionId: string, options?: RawAxiosRequestConfig): AxiosPromise<AutomationFlowExecution> {
             return localVarFp.getExecution(executionId, options).then((request) => request(axios, basePath));
         },
         /**
@@ -1229,13 +1229,13 @@ export const FlowsApiAxiosParamCreator = function (configuration?: Configuration
         /**
          * 
          * @summary Create a Flow
-         * @param {Flow} flow 
+         * @param {AutomationFlow} automationFlow 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        createFlow: async (flow: Flow, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
-            // verify required parameter 'flow' is not null or undefined
-            assertParamExists('createFlow', 'flow', flow)
+        createFlow: async (automationFlow: AutomationFlow, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+            // verify required parameter 'automationFlow' is not null or undefined
+            assertParamExists('createFlow', 'automationFlow', automationFlow)
             const localVarPath = `/v1/flows`;
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
@@ -1258,7 +1258,7 @@ export const FlowsApiAxiosParamCreator = function (configuration?: Configuration
             setSearchParams(localVarUrlObj, localVarQueryParameter);
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
             localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
-            localVarRequestOptions.data = serializeDataIfNeeded(flow, localVarRequestOptions, configuration)
+            localVarRequestOptions.data = serializeDataIfNeeded(automationFlow, localVarRequestOptions, configuration)
 
             return {
                 url: toPathString(localVarUrlObj),
@@ -1382,15 +1382,15 @@ export const FlowsApiAxiosParamCreator = function (configuration?: Configuration
          * 
          * @summary Update a Flow
          * @param {string} flowId 
-         * @param {Flow} flow 
+         * @param {AutomationFlow} automationFlow 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        updateFlow: async (flowId: string, flow: Flow, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+        updateFlow: async (flowId: string, automationFlow: AutomationFlow, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
             // verify required parameter 'flowId' is not null or undefined
             assertParamExists('updateFlow', 'flowId', flowId)
-            // verify required parameter 'flow' is not null or undefined
-            assertParamExists('updateFlow', 'flow', flow)
+            // verify required parameter 'automationFlow' is not null or undefined
+            assertParamExists('updateFlow', 'automationFlow', automationFlow)
             const localVarPath = `/v1/flows/{flowId}`
                 .replace(`{${"flowId"}}`, encodeURIComponent(String(flowId)));
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
@@ -1414,7 +1414,7 @@ export const FlowsApiAxiosParamCreator = function (configuration?: Configuration
             setSearchParams(localVarUrlObj, localVarQueryParameter);
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
             localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
-            localVarRequestOptions.data = serializeDataIfNeeded(flow, localVarRequestOptions, configuration)
+            localVarRequestOptions.data = serializeDataIfNeeded(automationFlow, localVarRequestOptions, configuration)
 
             return {
                 url: toPathString(localVarUrlObj),
@@ -1433,12 +1433,12 @@ export const FlowsApiFp = function(configuration?: Configuration) {
         /**
          * 
          * @summary Create a Flow
-         * @param {Flow} flow 
+         * @param {AutomationFlow} automationFlow 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async createFlow(flow: Flow, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Flow>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.createFlow(flow, options);
+        async createFlow(automationFlow: AutomationFlow, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<AutomationFlow>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.createFlow(automationFlow, options);
             const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
             const localVarOperationServerBasePath = operationServerMap['FlowsApi.createFlow']?.[localVarOperationServerIndex]?.url;
             return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
@@ -1463,7 +1463,7 @@ export const FlowsApiFp = function(configuration?: Configuration) {
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async getFlow(flowId: string, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Flow>> {
+        async getFlow(flowId: string, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<AutomationFlow>> {
             const localVarAxiosArgs = await localVarAxiosParamCreator.getFlow(flowId, options);
             const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
             const localVarOperationServerBasePath = operationServerMap['FlowsApi.getFlow']?.[localVarOperationServerIndex]?.url;
@@ -1486,12 +1486,12 @@ export const FlowsApiFp = function(configuration?: Configuration) {
          * 
          * @summary Update a Flow
          * @param {string} flowId 
-         * @param {Flow} flow 
+         * @param {AutomationFlow} automationFlow 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async updateFlow(flowId: string, flow: Flow, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Flow>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.updateFlow(flowId, flow, options);
+        async updateFlow(flowId: string, automationFlow: AutomationFlow, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<AutomationFlow>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.updateFlow(flowId, automationFlow, options);
             const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
             const localVarOperationServerBasePath = operationServerMap['FlowsApi.updateFlow']?.[localVarOperationServerIndex]?.url;
             return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
@@ -1508,12 +1508,12 @@ export const FlowsApiFactory = function (configuration?: Configuration, basePath
         /**
          * 
          * @summary Create a Flow
-         * @param {Flow} flow 
+         * @param {AutomationFlow} automationFlow 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        createFlow(flow: Flow, options?: RawAxiosRequestConfig): AxiosPromise<Flow> {
-            return localVarFp.createFlow(flow, options).then((request) => request(axios, basePath));
+        createFlow(automationFlow: AutomationFlow, options?: RawAxiosRequestConfig): AxiosPromise<AutomationFlow> {
+            return localVarFp.createFlow(automationFlow, options).then((request) => request(axios, basePath));
         },
         /**
          * 
@@ -1532,7 +1532,7 @@ export const FlowsApiFactory = function (configuration?: Configuration, basePath
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        getFlow(flowId: string, options?: RawAxiosRequestConfig): AxiosPromise<Flow> {
+        getFlow(flowId: string, options?: RawAxiosRequestConfig): AxiosPromise<AutomationFlow> {
             return localVarFp.getFlow(flowId, options).then((request) => request(axios, basePath));
         },
         /**
@@ -1549,12 +1549,12 @@ export const FlowsApiFactory = function (configuration?: Configuration, basePath
          * 
          * @summary Update a Flow
          * @param {string} flowId 
-         * @param {Flow} flow 
+         * @param {AutomationFlow} automationFlow 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        updateFlow(flowId: string, flow: Flow, options?: RawAxiosRequestConfig): AxiosPromise<Flow> {
-            return localVarFp.updateFlow(flowId, flow, options).then((request) => request(axios, basePath));
+        updateFlow(flowId: string, automationFlow: AutomationFlow, options?: RawAxiosRequestConfig): AxiosPromise<AutomationFlow> {
+            return localVarFp.updateFlow(flowId, automationFlow, options).then((request) => request(axios, basePath));
         },
     };
 };
@@ -1566,12 +1566,12 @@ export class FlowsApi extends BaseAPI {
     /**
      * 
      * @summary Create a Flow
-     * @param {Flow} flow 
+     * @param {AutomationFlow} automationFlow 
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
-    public createFlow(flow: Flow, options?: RawAxiosRequestConfig) {
-        return FlowsApiFp(this.configuration).createFlow(flow, options).then((request) => request(this.axios, this.basePath));
+    public createFlow(automationFlow: AutomationFlow, options?: RawAxiosRequestConfig) {
+        return FlowsApiFp(this.configuration).createFlow(automationFlow, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**
@@ -1611,12 +1611,12 @@ export class FlowsApi extends BaseAPI {
      * 
      * @summary Update a Flow
      * @param {string} flowId 
-     * @param {Flow} flow 
+     * @param {AutomationFlow} automationFlow 
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
-    public updateFlow(flowId: string, flow: Flow, options?: RawAxiosRequestConfig) {
-        return FlowsApiFp(this.configuration).updateFlow(flowId, flow, options).then((request) => request(this.axios, this.basePath));
+    public updateFlow(flowId: string, automationFlow: AutomationFlow, options?: RawAxiosRequestConfig) {
+        return FlowsApiFp(this.configuration).updateFlow(flowId, automationFlow, options).then((request) => request(this.axios, this.basePath));
     }
 }
 
@@ -2086,6 +2086,54 @@ export const PaymentsApiAxiosParamCreator = function (configuration?: Configurat
                 options: localVarRequestOptions,
             };
         },
+        /**
+         * 
+         * @summary Get Payment Intent details
+         * @param {string} id 
+         * @param {string} xZoneID The ID of the zone for this request.
+         * @param {GetPaymentIntentXZoneModeEnum} [xZoneMode] The mode of the zone (live or test).
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        getPaymentIntent: async (id: string, xZoneID: string, xZoneMode?: GetPaymentIntentXZoneModeEnum, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+            // verify required parameter 'id' is not null or undefined
+            assertParamExists('getPaymentIntent', 'id', id)
+            // verify required parameter 'xZoneID' is not null or undefined
+            assertParamExists('getPaymentIntent', 'xZoneID', xZoneID)
+            const localVarPath = `/v1/payments/{id}`
+                .replace(`{${"id"}}`, encodeURIComponent(String(id)));
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'GET', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+            // authentication ApiKeyAuth required
+            // http bearer authentication required
+            await setBearerAuthToObject(localVarHeaderParameter, configuration)
+
+            localVarHeaderParameter['Accept'] = 'application/json';
+
+            if (xZoneID != null) {
+                localVarHeaderParameter['X-Zone-ID'] = String(xZoneID);
+            }
+            if (xZoneMode != null) {
+                localVarHeaderParameter['X-Zone-Mode'] = String(xZoneMode);
+            }
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
     }
 };
 
@@ -2126,6 +2174,21 @@ export const PaymentsApiFp = function(configuration?: Configuration) {
             const localVarOperationServerBasePath = operationServerMap['PaymentsApi.createPaymentIntent']?.[localVarOperationServerIndex]?.url;
             return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
         },
+        /**
+         * 
+         * @summary Get Payment Intent details
+         * @param {string} id 
+         * @param {string} xZoneID The ID of the zone for this request.
+         * @param {GetPaymentIntentXZoneModeEnum} [xZoneMode] The mode of the zone (live or test).
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async getPaymentIntent(id: string, xZoneID: string, xZoneMode?: GetPaymentIntentXZoneModeEnum, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<PaymentIntent>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.getPaymentIntent(id, xZoneID, xZoneMode, options);
+            const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
+            const localVarOperationServerBasePath = operationServerMap['PaymentsApi.getPaymentIntent']?.[localVarOperationServerIndex]?.url;
+            return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
+        },
     }
 };
 
@@ -2160,6 +2223,18 @@ export const PaymentsApiFactory = function (configuration?: Configuration, baseP
         createPaymentIntent(xZoneID: string, createPaymentIntentRequest: CreatePaymentIntentRequest, xZoneMode?: CreatePaymentIntentXZoneModeEnum, options?: RawAxiosRequestConfig): AxiosPromise<PaymentIntent> {
             return localVarFp.createPaymentIntent(xZoneID, createPaymentIntentRequest, xZoneMode, options).then((request) => request(axios, basePath));
         },
+        /**
+         * 
+         * @summary Get Payment Intent details
+         * @param {string} id 
+         * @param {string} xZoneID The ID of the zone for this request.
+         * @param {GetPaymentIntentXZoneModeEnum} [xZoneMode] The mode of the zone (live or test).
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        getPaymentIntent(id: string, xZoneID: string, xZoneMode?: GetPaymentIntentXZoneModeEnum, options?: RawAxiosRequestConfig): AxiosPromise<PaymentIntent> {
+            return localVarFp.getPaymentIntent(id, xZoneID, xZoneMode, options).then((request) => request(axios, basePath));
+        },
     };
 };
 
@@ -2193,6 +2268,19 @@ export class PaymentsApi extends BaseAPI {
     public createPaymentIntent(xZoneID: string, createPaymentIntentRequest: CreatePaymentIntentRequest, xZoneMode?: CreatePaymentIntentXZoneModeEnum, options?: RawAxiosRequestConfig) {
         return PaymentsApiFp(this.configuration).createPaymentIntent(xZoneID, createPaymentIntentRequest, xZoneMode, options).then((request) => request(this.axios, this.basePath));
     }
+
+    /**
+     * 
+     * @summary Get Payment Intent details
+     * @param {string} id 
+     * @param {string} xZoneID The ID of the zone for this request.
+     * @param {GetPaymentIntentXZoneModeEnum} [xZoneMode] The mode of the zone (live or test).
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    public getPaymentIntent(id: string, xZoneID: string, xZoneMode?: GetPaymentIntentXZoneModeEnum, options?: RawAxiosRequestConfig) {
+        return PaymentsApiFp(this.configuration).getPaymentIntent(id, xZoneID, xZoneMode, options).then((request) => request(this.axios, this.basePath));
+    }
 }
 
 export const ConfirmPaymentIntentXZoneModeEnum = {
@@ -2205,6 +2293,11 @@ export const CreatePaymentIntentXZoneModeEnum = {
     Test: 'test'
 } as const;
 export type CreatePaymentIntentXZoneModeEnum = typeof CreatePaymentIntentXZoneModeEnum[keyof typeof CreatePaymentIntentXZoneModeEnum];
+export const GetPaymentIntentXZoneModeEnum = {
+    Live: 'live',
+    Test: 'test'
+} as const;
+export type GetPaymentIntentXZoneModeEnum = typeof GetPaymentIntentXZoneModeEnum[keyof typeof GetPaymentIntentXZoneModeEnum];
 
 
 /**
@@ -2263,13 +2356,17 @@ export const WalletsApiAxiosParamCreator = function (configuration?: Configurati
         /**
          * 
          * @summary Top up a wallet
-         * @param {V1WalletsTopupPostRequest} v1WalletsTopupPostRequest 
+         * @param {string} xZoneID The ID of the zone for this request.
+         * @param {TopupWalletRequest} topupWalletRequest 
+         * @param {TopupWalletXZoneModeEnum} [xZoneMode] The mode of the zone (live or test).
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        v1WalletsTopupPost: async (v1WalletsTopupPostRequest: V1WalletsTopupPostRequest, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
-            // verify required parameter 'v1WalletsTopupPostRequest' is not null or undefined
-            assertParamExists('v1WalletsTopupPost', 'v1WalletsTopupPostRequest', v1WalletsTopupPostRequest)
+        topupWallet: async (xZoneID: string, topupWalletRequest: TopupWalletRequest, xZoneMode?: TopupWalletXZoneModeEnum, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+            // verify required parameter 'xZoneID' is not null or undefined
+            assertParamExists('topupWallet', 'xZoneID', xZoneID)
+            // verify required parameter 'topupWalletRequest' is not null or undefined
+            assertParamExists('topupWallet', 'topupWalletRequest', topupWalletRequest)
             const localVarPath = `/v1/wallets/topup`;
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
@@ -2289,10 +2386,16 @@ export const WalletsApiAxiosParamCreator = function (configuration?: Configurati
             localVarHeaderParameter['Content-Type'] = 'application/json';
             localVarHeaderParameter['Accept'] = 'application/json';
 
+            if (xZoneID != null) {
+                localVarHeaderParameter['X-Zone-ID'] = String(xZoneID);
+            }
+            if (xZoneMode != null) {
+                localVarHeaderParameter['X-Zone-Mode'] = String(xZoneMode);
+            }
             setSearchParams(localVarUrlObj, localVarQueryParameter);
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
             localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
-            localVarRequestOptions.data = serializeDataIfNeeded(v1WalletsTopupPostRequest, localVarRequestOptions, configuration)
+            localVarRequestOptions.data = serializeDataIfNeeded(topupWalletRequest, localVarRequestOptions, configuration)
 
             return {
                 url: toPathString(localVarUrlObj),
@@ -2302,13 +2405,17 @@ export const WalletsApiAxiosParamCreator = function (configuration?: Configurati
         /**
          * 
          * @summary Transfer between wallets
-         * @param {V1WalletsTransferPostRequest} v1WalletsTransferPostRequest 
+         * @param {string} xZoneID The ID of the zone for this request.
+         * @param {TransferWalletRequest} transferWalletRequest 
+         * @param {TransferWalletXZoneModeEnum} [xZoneMode] The mode of the zone (live or test).
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        v1WalletsTransferPost: async (v1WalletsTransferPostRequest: V1WalletsTransferPostRequest, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
-            // verify required parameter 'v1WalletsTransferPostRequest' is not null or undefined
-            assertParamExists('v1WalletsTransferPost', 'v1WalletsTransferPostRequest', v1WalletsTransferPostRequest)
+        transferWallet: async (xZoneID: string, transferWalletRequest: TransferWalletRequest, xZoneMode?: TransferWalletXZoneModeEnum, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+            // verify required parameter 'xZoneID' is not null or undefined
+            assertParamExists('transferWallet', 'xZoneID', xZoneID)
+            // verify required parameter 'transferWalletRequest' is not null or undefined
+            assertParamExists('transferWallet', 'transferWalletRequest', transferWalletRequest)
             const localVarPath = `/v1/wallets/transfer`;
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
@@ -2328,10 +2435,16 @@ export const WalletsApiAxiosParamCreator = function (configuration?: Configurati
             localVarHeaderParameter['Content-Type'] = 'application/json';
             localVarHeaderParameter['Accept'] = 'application/json';
 
+            if (xZoneID != null) {
+                localVarHeaderParameter['X-Zone-ID'] = String(xZoneID);
+            }
+            if (xZoneMode != null) {
+                localVarHeaderParameter['X-Zone-Mode'] = String(xZoneMode);
+            }
             setSearchParams(localVarUrlObj, localVarQueryParameter);
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
             localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
-            localVarRequestOptions.data = serializeDataIfNeeded(v1WalletsTransferPostRequest, localVarRequestOptions, configuration)
+            localVarRequestOptions.data = serializeDataIfNeeded(transferWalletRequest, localVarRequestOptions, configuration)
 
             return {
                 url: toPathString(localVarUrlObj),
@@ -2365,27 +2478,31 @@ export const WalletsApiFp = function(configuration?: Configuration) {
         /**
          * 
          * @summary Top up a wallet
-         * @param {V1WalletsTopupPostRequest} v1WalletsTopupPostRequest 
+         * @param {string} xZoneID The ID of the zone for this request.
+         * @param {TopupWalletRequest} topupWalletRequest 
+         * @param {TopupWalletXZoneModeEnum} [xZoneMode] The mode of the zone (live or test).
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async v1WalletsTopupPost(v1WalletsTopupPostRequest: V1WalletsTopupPostRequest, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<V1WalletsTopupPost200Response>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.v1WalletsTopupPost(v1WalletsTopupPostRequest, options);
+        async topupWallet(xZoneID: string, topupWalletRequest: TopupWalletRequest, xZoneMode?: TopupWalletXZoneModeEnum, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<TopupWallet200Response>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.topupWallet(xZoneID, topupWalletRequest, xZoneMode, options);
             const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
-            const localVarOperationServerBasePath = operationServerMap['WalletsApi.v1WalletsTopupPost']?.[localVarOperationServerIndex]?.url;
+            const localVarOperationServerBasePath = operationServerMap['WalletsApi.topupWallet']?.[localVarOperationServerIndex]?.url;
             return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
         },
         /**
          * 
          * @summary Transfer between wallets
-         * @param {V1WalletsTransferPostRequest} v1WalletsTransferPostRequest 
+         * @param {string} xZoneID The ID of the zone for this request.
+         * @param {TransferWalletRequest} transferWalletRequest 
+         * @param {TransferWalletXZoneModeEnum} [xZoneMode] The mode of the zone (live or test).
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async v1WalletsTransferPost(v1WalletsTransferPostRequest: V1WalletsTransferPostRequest, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<V1WalletsTopupPost200Response>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.v1WalletsTransferPost(v1WalletsTransferPostRequest, options);
+        async transferWallet(xZoneID: string, transferWalletRequest: TransferWalletRequest, xZoneMode?: TransferWalletXZoneModeEnum, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<TopupWallet200Response>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.transferWallet(xZoneID, transferWalletRequest, xZoneMode, options);
             const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
-            const localVarOperationServerBasePath = operationServerMap['WalletsApi.v1WalletsTransferPost']?.[localVarOperationServerIndex]?.url;
+            const localVarOperationServerBasePath = operationServerMap['WalletsApi.transferWallet']?.[localVarOperationServerIndex]?.url;
             return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
         },
     }
@@ -2412,22 +2529,26 @@ export const WalletsApiFactory = function (configuration?: Configuration, basePa
         /**
          * 
          * @summary Top up a wallet
-         * @param {V1WalletsTopupPostRequest} v1WalletsTopupPostRequest 
+         * @param {string} xZoneID The ID of the zone for this request.
+         * @param {TopupWalletRequest} topupWalletRequest 
+         * @param {TopupWalletXZoneModeEnum} [xZoneMode] The mode of the zone (live or test).
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        v1WalletsTopupPost(v1WalletsTopupPostRequest: V1WalletsTopupPostRequest, options?: RawAxiosRequestConfig): AxiosPromise<V1WalletsTopupPost200Response> {
-            return localVarFp.v1WalletsTopupPost(v1WalletsTopupPostRequest, options).then((request) => request(axios, basePath));
+        topupWallet(xZoneID: string, topupWalletRequest: TopupWalletRequest, xZoneMode?: TopupWalletXZoneModeEnum, options?: RawAxiosRequestConfig): AxiosPromise<TopupWallet200Response> {
+            return localVarFp.topupWallet(xZoneID, topupWalletRequest, xZoneMode, options).then((request) => request(axios, basePath));
         },
         /**
          * 
          * @summary Transfer between wallets
-         * @param {V1WalletsTransferPostRequest} v1WalletsTransferPostRequest 
+         * @param {string} xZoneID The ID of the zone for this request.
+         * @param {TransferWalletRequest} transferWalletRequest 
+         * @param {TransferWalletXZoneModeEnum} [xZoneMode] The mode of the zone (live or test).
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        v1WalletsTransferPost(v1WalletsTransferPostRequest: V1WalletsTransferPostRequest, options?: RawAxiosRequestConfig): AxiosPromise<V1WalletsTopupPost200Response> {
-            return localVarFp.v1WalletsTransferPost(v1WalletsTransferPostRequest, options).then((request) => request(axios, basePath));
+        transferWallet(xZoneID: string, transferWalletRequest: TransferWalletRequest, xZoneMode?: TransferWalletXZoneModeEnum, options?: RawAxiosRequestConfig): AxiosPromise<TopupWallet200Response> {
+            return localVarFp.transferWallet(xZoneID, transferWalletRequest, xZoneMode, options).then((request) => request(axios, basePath));
         },
     };
 };
@@ -2452,23 +2573,27 @@ export class WalletsApi extends BaseAPI {
     /**
      * 
      * @summary Top up a wallet
-     * @param {V1WalletsTopupPostRequest} v1WalletsTopupPostRequest 
+     * @param {string} xZoneID The ID of the zone for this request.
+     * @param {TopupWalletRequest} topupWalletRequest 
+     * @param {TopupWalletXZoneModeEnum} [xZoneMode] The mode of the zone (live or test).
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
-    public v1WalletsTopupPost(v1WalletsTopupPostRequest: V1WalletsTopupPostRequest, options?: RawAxiosRequestConfig) {
-        return WalletsApiFp(this.configuration).v1WalletsTopupPost(v1WalletsTopupPostRequest, options).then((request) => request(this.axios, this.basePath));
+    public topupWallet(xZoneID: string, topupWalletRequest: TopupWalletRequest, xZoneMode?: TopupWalletXZoneModeEnum, options?: RawAxiosRequestConfig) {
+        return WalletsApiFp(this.configuration).topupWallet(xZoneID, topupWalletRequest, xZoneMode, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**
      * 
      * @summary Transfer between wallets
-     * @param {V1WalletsTransferPostRequest} v1WalletsTransferPostRequest 
+     * @param {string} xZoneID The ID of the zone for this request.
+     * @param {TransferWalletRequest} transferWalletRequest 
+     * @param {TransferWalletXZoneModeEnum} [xZoneMode] The mode of the zone (live or test).
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
-    public v1WalletsTransferPost(v1WalletsTransferPostRequest: V1WalletsTransferPostRequest, options?: RawAxiosRequestConfig) {
-        return WalletsApiFp(this.configuration).v1WalletsTransferPost(v1WalletsTransferPostRequest, options).then((request) => request(this.axios, this.basePath));
+    public transferWallet(xZoneID: string, transferWalletRequest: TransferWalletRequest, xZoneMode?: TransferWalletXZoneModeEnum, options?: RawAxiosRequestConfig) {
+        return WalletsApiFp(this.configuration).transferWallet(xZoneID, transferWalletRequest, xZoneMode, options).then((request) => request(this.axios, this.basePath));
     }
 }
 
@@ -2477,6 +2602,16 @@ export const GetWalletXZoneModeEnum = {
     Test: 'test'
 } as const;
 export type GetWalletXZoneModeEnum = typeof GetWalletXZoneModeEnum[keyof typeof GetWalletXZoneModeEnum];
+export const TopupWalletXZoneModeEnum = {
+    Live: 'live',
+    Test: 'test'
+} as const;
+export type TopupWalletXZoneModeEnum = typeof TopupWalletXZoneModeEnum[keyof typeof TopupWalletXZoneModeEnum];
+export const TransferWalletXZoneModeEnum = {
+    Live: 'live',
+    Test: 'test'
+} as const;
+export type TransferWalletXZoneModeEnum = typeof TransferWalletXZoneModeEnum[keyof typeof TransferWalletXZoneModeEnum];
 
 
 /**

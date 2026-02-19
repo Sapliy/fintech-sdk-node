@@ -1,21 +1,21 @@
-# WalletCreateWalletRequest
+# RegisterUser201Response
 
 
 ## Properties
 
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
-**userId** | **string** |  | [optional] [default to undefined]
-**currency** | **string** |  | [optional] [default to undefined]
+**token** | **string** |  | [optional] [default to undefined]
+**user** | [**User**](User.md) |  | [optional] [default to undefined]
 
 ## Example
 
 ```typescript
-import { WalletCreateWalletRequest } from '@sapliyio/fintech-node-generated';
+import { RegisterUser201Response } from '@sapliyio/fintech-node-generated';
 
-const instance: WalletCreateWalletRequest = {
-    userId,
-    currency,
+const instance: RegisterUser201Response = {
+    token,
+    user,
 };
 ```
 

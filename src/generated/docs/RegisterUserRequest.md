@@ -1,19 +1,21 @@
-# ZoneBulkUpdateMetadataResponse
+# RegisterUserRequest
 
 
 ## Properties
 
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
-**updatedCount** | **number** |  | [optional] [default to undefined]
+**email** | **string** |  | [default to undefined]
+**password** | **string** |  | [default to undefined]
 
 ## Example
 
 ```typescript
-import { ZoneBulkUpdateMetadataResponse } from '@sapliyio/fintech-node-generated';
+import { RegisterUserRequest } from '@sapliyio/fintech-node-generated';
 
-const instance: ZoneBulkUpdateMetadataResponse = {
-    updatedCount,
+const instance: RegisterUserRequest = {
+    email,
+    password,
 };
 ```
 

@@ -1,19 +1,21 @@
-# NotificationsDeleteWebhookEndpointResponse
+# CreateSubscriptionRequest
 
 
 ## Properties
 
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
-**success** | **boolean** |  | [optional] [default to undefined]
+**plan_id** | **string** |  | [default to undefined]
+**customer_id** | **string** |  | [optional] [default to undefined]
 
 ## Example
 
 ```typescript
-import { NotificationsDeleteWebhookEndpointResponse } from '@sapliyio/fintech-node-generated';
+import { CreateSubscriptionRequest } from '@sapliyio/fintech-node-generated';
 
-const instance: NotificationsDeleteWebhookEndpointResponse = {
-    success,
+const instance: CreateSubscriptionRequest = {
+    plan_id,
+    customer_id,
 };
 ```
 

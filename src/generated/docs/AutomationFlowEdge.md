@@ -1,4 +1,4 @@
-# Node
+# AutomationFlowEdge
 
 
 ## Properties
@@ -6,20 +6,20 @@
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
 **id** | **string** |  | [default to undefined]
-**type** | **string** |  | [default to undefined]
-**position** | **object** |  | [optional] [default to undefined]
-**data** | **object** |  | [optional] [default to undefined]
+**source** | **string** |  | [default to undefined]
+**target** | **string** |  | [default to undefined]
+**source_handle** | **string** |  | [optional] [default to undefined]
 
 ## Example
 
 ```typescript
-import { Node } from '@sapliyio/fintech-node-generated';
+import { AutomationFlowEdge } from '@sapliyio/fintech-node-generated';
 
-const instance: Node = {
+const instance: AutomationFlowEdge = {
     id,
-    type,
-    position,
-    data,
+    source,
+    target,
+    source_handle,
 };
 ```
 

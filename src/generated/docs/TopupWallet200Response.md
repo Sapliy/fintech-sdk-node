@@ -1,23 +1,21 @@
-# ZoneServiceUpdateZoneBody
+# TopupWallet200Response
 
 
 ## Properties
 
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
-**name** | **string** |  | [optional] [default to undefined]
+**transaction_id** | **string** |  | [optional] [default to undefined]
 **status** | **string** |  | [optional] [default to undefined]
-**metadata** | **{ [key: string]: string; }** |  | [optional] [default to undefined]
 
 ## Example
 
 ```typescript
-import { ZoneServiceUpdateZoneBody } from '@sapliyio/fintech-node-generated';
+import { TopupWallet200Response } from '@sapliyio/fintech-node-generated';
 
-const instance: ZoneServiceUpdateZoneBody = {
-    name,
+const instance: TopupWallet200Response = {
+    transaction_id,
     status,
-    metadata,
 };
 ```
 

@@ -5,8 +5,8 @@ All URIs are relative to *https://api.sapliy.io*
 |Method | HTTP request | Description|
 |------------- | ------------- | -------------|
 |[**getWallet**](#getwallet) | **GET** /v1/wallets/{user_id} | Get Wallet Balance|
-|[**v1WalletsTopupPost**](#v1walletstopuppost) | **POST** /v1/wallets/topup | Top up a wallet|
-|[**v1WalletsTransferPost**](#v1walletstransferpost) | **POST** /v1/wallets/transfer | Transfer between wallets|
+|[**topupWallet**](#topupwallet) | **POST** /v1/wallets/topup | Top up a wallet|
+|[**transferWallet**](#transferwallet) | **POST** /v1/wallets/transfer | Transfer between wallets|
 
 # **getWallet**
 > Wallet getWallet()
@@ -64,8 +64,8 @@ const { status, data } = await apiInstance.getWallet(
 
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
-# **v1WalletsTopupPost**
-> V1WalletsTopupPost200Response v1WalletsTopupPost(v1WalletsTopupPostRequest)
+# **topupWallet**
+> TopupWallet200Response topupWallet(topupWalletRequest)
 
 
 ### Example
@@ -74,16 +74,20 @@ const { status, data } = await apiInstance.getWallet(
 import {
     WalletsApi,
     Configuration,
-    V1WalletsTopupPostRequest
+    TopupWalletRequest
 } from '@sapliyio/fintech-node-generated';
 
 const configuration = new Configuration();
 const apiInstance = new WalletsApi(configuration);
 
-let v1WalletsTopupPostRequest: V1WalletsTopupPostRequest; //
+let xZoneID: string; //The ID of the zone for this request. (default to undefined)
+let topupWalletRequest: TopupWalletRequest; //
+let xZoneMode: 'live' | 'test'; //The mode of the zone (live or test). (optional) (default to undefined)
 
-const { status, data } = await apiInstance.v1WalletsTopupPost(
-    v1WalletsTopupPostRequest
+const { status, data } = await apiInstance.topupWallet(
+    xZoneID,
+    topupWalletRequest,
+    xZoneMode
 );
 ```
 
@@ -91,12 +95,14 @@ const { status, data } = await apiInstance.v1WalletsTopupPost(
 
 |Name | Type | Description  | Notes|
 |------------- | ------------- | ------------- | -------------|
-| **v1WalletsTopupPostRequest** | **V1WalletsTopupPostRequest**|  | |
+| **topupWalletRequest** | **TopupWalletRequest**|  | |
+| **xZoneID** | [**string**] | The ID of the zone for this request. | defaults to undefined|
+| **xZoneMode** | [**&#39;live&#39; | &#39;test&#39;**]**Array<&#39;live&#39; &#124; &#39;test&#39;>** | The mode of the zone (live or test). | (optional) defaults to undefined|
 
 
 ### Return type
 
-**V1WalletsTopupPost200Response**
+**TopupWallet200Response**
 
 ### Authorization
 
@@ -115,8 +121,8 @@ const { status, data } = await apiInstance.v1WalletsTopupPost(
 
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
-# **v1WalletsTransferPost**
-> V1WalletsTopupPost200Response v1WalletsTransferPost(v1WalletsTransferPostRequest)
+# **transferWallet**
+> TopupWallet200Response transferWallet(transferWalletRequest)
 
 
 ### Example
@@ -125,16 +131,20 @@ const { status, data } = await apiInstance.v1WalletsTopupPost(
 import {
     WalletsApi,
     Configuration,
-    V1WalletsTransferPostRequest
+    TransferWalletRequest
 } from '@sapliyio/fintech-node-generated';
 
 const configuration = new Configuration();
 const apiInstance = new WalletsApi(configuration);
 
-let v1WalletsTransferPostRequest: V1WalletsTransferPostRequest; //
+let xZoneID: string; //The ID of the zone for this request. (default to undefined)
+let transferWalletRequest: TransferWalletRequest; //
+let xZoneMode: 'live' | 'test'; //The mode of the zone (live or test). (optional) (default to undefined)
 
-const { status, data } = await apiInstance.v1WalletsTransferPost(
-    v1WalletsTransferPostRequest
+const { status, data } = await apiInstance.transferWallet(
+    xZoneID,
+    transferWalletRequest,
+    xZoneMode
 );
 ```
 
@@ -142,12 +152,14 @@ const { status, data } = await apiInstance.v1WalletsTransferPost(
 
 |Name | Type | Description  | Notes|
 |------------- | ------------- | ------------- | -------------|
-| **v1WalletsTransferPostRequest** | **V1WalletsTransferPostRequest**|  | |
+| **transferWalletRequest** | **TransferWalletRequest**|  | |
+| **xZoneID** | [**string**] | The ID of the zone for this request. | defaults to undefined|
+| **xZoneMode** | [**&#39;live&#39; | &#39;test&#39;**]**Array<&#39;live&#39; &#124; &#39;test&#39;>** | The mode of the zone (live or test). | (optional) defaults to undefined|
 
 
 ### Return type
 
-**V1WalletsTopupPost200Response**
+**TopupWallet200Response**
 
 ### Authorization
 
