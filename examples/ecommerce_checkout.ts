@@ -6,45 +6,47 @@ import { SapliyClient } from '../src';
  * This example shows how to handle a checkout process:
  * 1. Create a Payment Intent
  * 2. Record revenue in the Ledger
- * 3. Trigger a "notification" flow for order confirmation
+ * 3. Trigger an order confirmation event
  */
 async function runCheckoutExample() {
-    const client = new SapliyClient('sk_test_ecommerce_123', 'http://localhost:8080');
+    // Config uses basePath
+    const client = new SapliyClient('sk_test_ecommerce_123', { basePath: 'http://localhost:8080' });
 
     const zoneID = 'zone_ecommerce_prod';
 
     console.log('--- Step 1: Creating Payment Intent ---');
     try {
-        const payment = await client.payments.paymentServiceCreatePaymentIntent({
-            amount: "4999", // Note: The generated API expects strings for int64/decimal usually
+        const payment = await client.payments.createPaymentIntent(zoneID, {
+            amount: 4999, // $49.99
             currency: 'USD',
             description: 'Order #ORD-9982',
         });
         console.log(`Payment Intent created: ${payment.data.id} - Status: ${payment.data.status}`);
 
         console.log('\n--- Step 2: Recording Revenue in Ledger ---');
-        // We record the gross amount in our Asset account (Cash) and Revenue account
-        await client.ledger.ledgerServiceRecordTransaction({
-            accountId: 'acc_cash_usd',
-            amount: "4999",
-            currency: 'USD',
+        // We record the double-entry transaction using the helper or direct v1LedgerTransactionsPost
+        await client.recordTransaction(zoneID, {
+            reference_id: payment.data.id,
             description: 'Sale Revenue: Order #ORD-9982',
-            referenceId: payment.data.id,
-            zoneId: zoneID,
-            mode: 'test'
+            entries: [
+                { account_id: 'acc_cash_usd', amount: 4999 },    // Debit Cash
+                { account_id: 'acc_revenue_usd', amount: -4999 } // Credit Revenue
+            ]
         });
         console.log('Ledger transaction recorded.');
 
-        console.log('\n--- Step 3: Triggering Order Confirmation Flow ---');
-        // We emit an event that triggers a flow configured in the Flow Builder
-        // This flow might send a WhatsApp message, generate an invoice, and update CRM.
-        // Since we don't have a direct "emit" in the generated API yet (it's usually a POST to /events),
-        // we use the generic auth service or custom integration.
-        // In Sapliy, events are often handled via the Gateway or specialized endpoints.
-
-        // For this example, let's assume we have a flow that starts on "order.completed"
+        console.log('\n--- Step 3: Triggering Order Confirmation ---');
         console.log('Emitting "order.completed" event...');
-        // (Actual implementation would depend on the Event API structure)
+        const event = await client.emitEvent({
+            type: 'order.completed',
+            data: {
+                order_id: 'ORD-9982',
+                payment_id: payment.data.id,
+                amount: 4999,
+                currency: 'USD'
+            }
+        });
+        console.log('Event emitted ID:', event.data.event_id);
 
     } catch (error: any) {
         console.error('Error during checkout:', error.response?.data || error.message);
@@ -52,3 +54,4 @@ async function runCheckoutExample() {
 }
 
 // runCheckoutExample();
+runCheckoutExample().then(() => console.log('Checkout example finished.'));

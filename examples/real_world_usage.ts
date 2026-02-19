@@ -1,39 +1,40 @@
 import { SapliyClient } from '../src';
 
 async function runExample() {
-    const client = new SapliyClient('sk_test_123', 'http://localhost:8080');
+    const client = new SapliyClient('sk_test_123', { basePath: 'http://localhost:8080' });
 
     try {
         console.log('--- Payments Example ---');
-        const payment = await client.payments.paymentServiceCreatePaymentIntent({
-            amount: '1000', // $10.00
+        // Node SDK uses the generated method names
+        const payment = await client.payments.createPaymentIntent('zone_main_123', {
+            amount: 1000, // $10.00
             currency: 'USD',
             description: 'Example Payment for Node.js SDK'
         });
         console.log('Created Payment Intent:', payment.data.id);
 
-        await client.payments.paymentServiceConfirmPaymentIntent(payment.data.id!, {
-            paymentMethodId: 'pm_card_visa'
+        await client.payments.confirmPaymentIntent(payment.data.id, 'zone_main_123', undefined, {
+            payment_method_id: 'pm_card_visa'
         });
         console.log('Confirmed Payment Intent!');
 
         console.log('\n--- Wallets Example ---');
-        const wallet = await client.wallets.walletServiceCreateWallet({
-            userId: 'user_123',
-            currency: 'USD'
-        });
-        console.log('Created Wallet:', wallet.data.id);
+        const wallet = await client.wallets.getWallet('user_123', 'zone_main_123');
+        console.log('Wallet Balance:', wallet.data.balance);
 
-        console.log('\n--- Notifications Example ---');
-        const webhook = await client.notifications.notificationServiceCreateWebhookEndpoint({
-            url: 'https://example.com/webhook',
-            enabledEvents: ['payment.succeeded', 'payment.failed'],
-            description: 'Main Webhook'
+        const topup = await client.wallets.topupWallet('zone_main_123', {
+            amount: 5000,
+            currency: 'USD',
+            reference_id: 'topup_001'
         });
-        console.log('Created Webhook Endpoint:', webhook.data.id);
+        console.log('Topup Transaction ID:', topup.data.transaction_id);
 
-        const history = await client.notifications.notificationServiceGetNotificationHistory('user_123');
-        console.log('Retrieved Notification History, count:', history.data.notifications?.length);
+        console.log('\n--- Events Example ---');
+        const event = await client.events.emitEvent({
+            type: 'user.active',
+            data: { user_id: 'user_123' }
+        });
+        console.log('Emitted Event ID:', event.data.event_id);
 
     } catch (error: any) {
         console.error('Error:', error.response?.data || error.message);
