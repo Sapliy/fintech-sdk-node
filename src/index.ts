@@ -1,5 +1,6 @@
 export * from './generated';
 export * from './generated/api';
+export * from './playbooks';
 
 import axios, { AxiosInstance, RawAxiosRequestConfig } from 'axios';
 import {
@@ -19,6 +20,7 @@ import {
   CreateZoneRequest,
 } from './generated/api';
 import { Configuration } from './generated/configuration';
+import { Playbooks } from './playbooks';
 
 export interface SapliyClientOptions {
   /** Base URL of the Sapliy API gateway. Defaults to production. */
@@ -28,7 +30,7 @@ export interface SapliyClientOptions {
 }
 
 /**
- * SapliyClient is the main entry point for the Sapliy Fintech Node.js SDK.
+ * SapliyClient is the main entry point for the Sapliy Node.js SDK.
  */
 export class SapliyClient {
   public auth: AuthApi;
@@ -40,6 +42,7 @@ export class SapliyClient {
   public payments: PaymentsApi;
   public wallets: WalletsApi;
   public zones: ZonesApi;
+  public playbooks: Playbooks;
 
   constructor(apiKey: string, options: SapliyClientOptions = {
     basePath: "https://api.sapliy.io",
@@ -71,6 +74,7 @@ export class SapliyClient {
     this.payments = new PaymentsApi(config, basePath, axiosInstance);
     this.wallets = new WalletsApi(config, basePath, axiosInstance);
     this.zones = new ZonesApi(config, basePath, axiosInstance);
+    this.playbooks = new Playbooks();
   }
 
   // Helper methods for common tasks (DRY)

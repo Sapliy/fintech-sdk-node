@@ -1,24 +1,24 @@
 {
   "name": "@sapliyio/fintech",
   "version": "1.1.0",
-  "description": "Fintech Ecosystem SDK for Node.js built by Sapliy",
+  "description": "Official SAPLIY SDK (legacy package name: @sapliyio/fintech)",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "scripts": {
     "build": "tsc",
     "prepublishOnly": "npm run build",
     "lint": "tsc --noEmit",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "npm run build && node --test \"dist/**/*.test.js\""
   },
   "files": [
     "dist"
   ],
   "repository": {
     "type": "git",
-    "url": "https://github.com/sapliy/fintech-sdk-node.git"
+    "url": "https://github.com/sapliy/sapliy-sdk-node.git"
   },
   "keywords": [
-    "fintech",
+    "sapliy",
     "sdk",
     "payments",
     "api",
